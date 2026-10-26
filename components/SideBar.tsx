@@ -10,19 +10,17 @@ import {
   FolderKanban,
   Bell,
   User,
-  Settings,
   LogOut,
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { label: "Home", href: "/", icon: Home },
+  { label: "Home", href: "/employee/dashboard", icon: Home },
   { label: "My Work", href: "/employee/work", icon: ListChecks },
   { label: "Submit Report", href: "/employee/submit-report", icon: FilePlus2 },
   { label: "My Reports", href: "/employee/reports", icon: FileText },
   { label: "My Projects", href: "/employee/projects", icon: FolderKanban },
   { label: "Notifications", href: "/employee/notifications", icon: Bell },
   { label: "My Profile", href: "/employee/profile", icon: User },
-  { label: "Settings", href: "/settings", icon: Settings },
 ];
 
 type SidebarProps = {
