@@ -1,4 +1,4 @@
-import { Calendar, ListChecks, User } from "lucide-react";
+import { Calendar, ListChecks, Plus, User } from "lucide-react";
 
 const projects = [
   { name: "Atlas Mobile App", status: "Active", desc: "Redesign of the customer-facing mobile banking experience for iOS and Android.", progress: 64, lead: "Rahul Mehta", due: "Nov 19, 2026", tasks: 3, latest: "Onboarding screens — KYC step" },
@@ -9,8 +9,16 @@ const projects = [
 export default function MyProjects() {
   return (
     <div className="mx-auto w-full max-w-5xl">
-      <h1 className="text-2xl font-bold text-white">My Projects</h1>
-      <p className="mb-6 mt-1 text-sm text-gray-400">Projects you&apos;ve been assigned to.</p>
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">My Projects</h1>
+          <p className="mt-1 text-sm text-gray-400">Projects you&apos;ve been assigned to.</p>
+        </div>
+        <button className="flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400">
+          <Plus className="h-4 w-4" />
+          Create project
+        </button>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((p) => (
@@ -41,6 +49,13 @@ export default function MyProjects() {
             </p>
           </article>
         ))}
+
+        <button className="cursor-pointer flex min-h-55 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/15 text-sm text-gray-400 transition-colors hover:border-indigo-400 hover:text-white">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5">
+            <Plus className="h-5 w-5" />
+          </span>
+          Create a project
+        </button>
       </div>
     </div>
   );

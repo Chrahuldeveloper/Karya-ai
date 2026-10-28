@@ -44,7 +44,6 @@ export default function Sidebar({
 
   return (
     <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-white/10 bg-[#0e0f13]">
-      {/* Logo */}
       <div className="flex items-center gap-3 px-6 py-6">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-sm font-bold text-white">
           N
@@ -52,7 +51,6 @@ export default function Sidebar({
         <span className="text-lg font-bold tracking-widest text-white">NIVO</span>
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 space-y-1 px-4">
         {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
           const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -74,7 +72,6 @@ export default function Sidebar({
         })}
       </nav>
 
-      {/* User */}
       <div className="flex items-center gap-3 border-t border-white/10 px-5 py-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500/20 text-sm font-semibold text-indigo-300">
           {initials}

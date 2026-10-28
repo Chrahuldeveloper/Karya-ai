@@ -1,4 +1,5 @@
 import { ArrowRight, Bell, Calendar, CheckCircle2, Clock, FileText, FolderKanban } from "lucide-react";
+import Link from "next/link";
 
 const stats = [
   { label: "Reports this week", value: "0", icon: FileText },
@@ -40,7 +41,6 @@ const card = "rounded-xl border border-white/10 bg-[#101116]";
 export default function Home() {
   return (
     <div className="mx-auto w-full max-w-6xl space-y-5">
-      {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <p className="text-xs text-gray-400">Monday, October 26 · Meridian Labs</p>
@@ -55,16 +55,16 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Pending banner */}
       <div className="flex items-center justify-between rounded-xl border border-indigo-400/20 bg-indigo-500/10 px-5 py-4">
         <p className="flex items-center gap-3 text-sm font-medium text-white">
           <Clock className="h-4 w-4 text-indigo-300" />
           Your daily work report is pending.
         </p>
-        <button className="rounded-lg bg-indigo-500 px-3.5 py-2 text-xs font-semibold text-white">Submit Report</button>
+        <Link href={"/employee/submit-report"}>
+          <button className=" cursor-pointer rounded-lg bg-indigo-500 px-3.5 py-2 text-xs font-semibold text-white">Submit Report</button>
+        </Link>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {stats.map(({ label, value, icon: Icon }) => (
           <div key={label} className={`${card} p-5`}>
@@ -77,7 +77,6 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Quick actions */}
       <div className="grid gap-4 md:grid-cols-3">
         <button className="flex h-12 items-center justify-center gap-2 rounded-lg bg-indigo-500 text-sm font-semibold text-white">
           <FileText className="h-4 w-4" /> Submit Today&apos;s Report
@@ -91,56 +90,54 @@ export default function Home() {
       </div>
 
       <div className="space-y-5">
-          {/* Today's work */}
-          <section className={card}>
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-              <h2 className="text-sm font-semibold text-white">Today&apos;s Work</h2>
-              <span className="text-xs font-medium text-indigo-400">View all</span>
-            </div>
-            <ul className="divide-y divide-white/10">
-              {work.map((t) => (
-                <li key={t.title} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-                  <div>
-                    <p className="font-semibold text-white">{t.title}</p>
-                    <p className="mt-0.5 text-xs text-gray-400">{t.project}</p>
+        <section className={card}>
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+            <h2 className="text-sm font-semibold text-white">Today&apos;s Work</h2>
+            <span className="text-xs font-medium text-indigo-400">View all</span>
+          </div>
+          <ul className="divide-y divide-white/10">
+            {work.map((t) => (
+              <li key={t.title} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+                <div>
+                  <p className="font-semibold text-white">{t.title}</p>
+                  <p className="mt-0.5 text-xs text-gray-400">{t.project}</p>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  {priorityStyle[t.priority] && (
+                    <span className={`rounded-md px-2 py-0.5 font-medium ${priorityStyle[t.priority]}`}>{t.priority}</span>
+                  )}
+                  <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" />{t.due}</span>
+                  <span className={`rounded-md px-2 py-0.5 font-medium ${statusStyle[t.status]}`}>{t.status}</span>
+                  <div className="h-1.5 w-16 rounded-full bg-white/10">
+                    <div className="h-full rounded-full bg-indigo-400" style={{ width: `${t.progress}%` }} />
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-400">
-                    {priorityStyle[t.priority] && (
-                      <span className={`rounded-md px-2 py-0.5 font-medium ${priorityStyle[t.priority]}`}>{t.priority}</span>
-                    )}
-                    <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" />{t.due}</span>
-                    <span className={`rounded-md px-2 py-0.5 font-medium ${statusStyle[t.status]}`}>{t.status}</span>
-                    <div className="h-1.5 w-16 rounded-full bg-white/10">
-                      <div className="h-full rounded-full bg-indigo-400" style={{ width: `${t.progress}%` }} />
-                    </div>
-                    <span className="w-8 text-right">{t.progress}%</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
+                  <span className="w-8 text-right">{t.progress}%</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-          {/* Recent reports */}
-          <section className={card}>
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-              <h2 className="text-sm font-semibold text-white">Recent Reports</h2>
-              <span className="text-xs font-medium text-indigo-400">View all</span>
-            </div>
-            <ul className="divide-y divide-white/10">
-              {reports.map((r) => (
-                <li key={r.title} className="flex items-center justify-between px-5 py-3.5">
-                  <div>
-                    <p className="text-sm font-semibold text-white">{r.title}</p>
-                    <p className="text-xs text-gray-400">{r.meta}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${statusStyle[r.status]}`}>{r.status}</span>
-                    <ArrowRight className="h-4 w-4 text-gray-300" />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
+        <section className={card}>
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+            <h2 className="text-sm font-semibold text-white">Recent Reports</h2>
+            <span className="text-xs font-medium text-indigo-400">View all</span>
+          </div>
+          <ul className="divide-y divide-white/10">
+            {reports.map((r) => (
+              <li key={r.title} className="flex items-center justify-between px-5 py-3.5">
+                <div>
+                  <p className="text-sm font-semibold text-white">{r.title}</p>
+                  <p className="text-xs text-gray-400">{r.meta}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${statusStyle[r.status]}`}>{r.status}</span>
+                  <ArrowRight className="h-4 w-4 text-gray-300" />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
     </div>
   );
