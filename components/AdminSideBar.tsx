@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileText, FolderKanban, LayoutDashboard, ListChecks, LogOut, Settings, Users } from "lucide-react";
+import { FileText, FolderKanban, LayoutDashboard, ListChecks, LogOut, Settings, Sparkles,Users } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "Employees", href: "/admin/employees", icon: Users },
-  { label: "Reports", href: "/admin/reports", icon: FileText },
-  { label: "Projects", href: "/admin/projects", icon: FolderKanban },
-  { label: "Tasks", href: "/admin/tasks", icon: ListChecks },
-  { label: "Settings", href: "/admin/settings", icon: Settings },
+  { label: "Employees", href: "/admin/admin-employee", icon: Users },
+  { label: "Reports", href: "/admin/admin-reports", icon: FileText },
+  { label: "Projects", href: "/admin/admin-projects", icon: FolderKanban },
+  { label: "AI Assistant", href: "/admin/admin-chat", icon: Sparkles },
+  { label: "Tasks", href: "/admin/admin-tasks", icon: ListChecks },
+  { label: "Settings", href: "/admin/admin-settings", icon: Settings },
 ];
 
 export default function AdminSidebar() {

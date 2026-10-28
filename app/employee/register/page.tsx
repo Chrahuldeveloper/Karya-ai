@@ -1,32 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff , ChevronDown} from "lucide-react";
+import { createClient } from "@/supabase/client";
+import { useRouter } from 'next/navigation';
 
 const inputClass =
   "mt-2 w-full rounded-lg border border-white/10 bg-transparent px-3 py-2.5 text-sm text-white placeholder:text-gray-500 outline-none transition-colors focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400";
 
 export default function RegisterPage() {
+
+  const router = useRouter();
+
   const [form, setForm] = useState({
     fullName: "",
     email: "",
+    Company:"",
     password: "",
     confirm: "",
   });
   const [show, setShow] = useState(false);
-  const [error, setError] = useState("");
+  
+  const [error, setError] = useState<string>("");
 
-  const update = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setForm((f) => ({ ...f, [field]: e.target.value }));
+  const update =
+  (field: keyof typeof form) =>
+  (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault();
     if (form.password.length < 8 || !/[A-Z]/.test(form.password) || !/\d/.test(form.password)) {
       return setError("Password needs 8+ characters, one uppercase letter and one number.");
     }
     if (form.password !== form.confirm) return setError("Passwords don't match.");
-    setError("");
+
+    try {
+      const supabase = createClient()
+
+      const {data,error} = await supabase.from('users') 
+      .insert([
+        { 
+          full_name: form.fullName, 
+          email: form.email,
+          Company :form.Company,
+          password:form.password
+        },
+      ])
+      .select() 
+
+      if (error) return setError(error.message);
+
+      if (data) router.push("/employee/dashboard")
+
+    } catch (error) {
+      console.log(error)
+    }
+
   };
 
   return (
@@ -47,6 +80,25 @@ export default function RegisterPage() {
             <div>
               <label htmlFor="fullName" className="text-sm font-semibold">Full name</label>
               <input id="fullName" required autoComplete="name" value={form.fullName} onChange={update("fullName")} placeholder="Aisha Verma" className={inputClass} />
+            </div>
+
+            <div>
+              <label htmlFor="company" className="text-sm font-semibold">Company</label>
+              <div className="relative">
+                <select
+                  id="company"
+                  required
+                  value={form.Company}
+                  onChange={update("Company")}
+                  className={`${inputClass} appearance-none pr-10 ${form.Company ? "" : "text-gray-500"}`}
+                >
+                  <option value="" className="bg-[#101116]">Select company</option>
+                  <option value="Company A" className="bg-[#101116] text-white">Company A</option>
+                  <option value="Company B" className="bg-[#101116] text-white">Company B</option>
+                  <option value="Other" className="bg-[#101116] text-white">Other</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-6.5 h-4 w-4 text-gray-400" />
+              </div>
             </div>
 
             <div>
@@ -92,7 +144,7 @@ export default function RegisterPage() {
         <p className="mt-6 text-center text-sm text-gray-400">
           Already have an account?{" "}
           <Link href="/login" className="font-semibold text-indigo-400 hover:text-indigo-300">
-            Sign in
+            Log in
           </Link>
         </p>
       </div>
