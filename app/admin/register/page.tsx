@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Eye, EyeOff } from "lucide-react";
-
+import { createClient } from "@/supabase/client";
+import { useRouter } from 'next/navigation';
 const inputClass =
   "mt-2 w-full rounded-lg border border-white/10 bg-transparent px-3 py-2.5 text-sm text-white placeholder:text-gray-500 outline-none transition-colors focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400";
 
@@ -24,7 +25,7 @@ export default function AdminRegisterPage() {
   });
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
-
+  const router = useRouter();
   const update =
     (field: keyof typeof form) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
