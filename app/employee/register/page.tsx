@@ -1,6 +1,6 @@
 "use client";
 
-import { SetStateAction, useState } from "react";
+import {  useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff , ChevronDown} from "lucide-react";
 import { createClient } from "@/supabase/client";
