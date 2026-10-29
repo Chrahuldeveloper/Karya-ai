@@ -14,10 +14,7 @@ export default function MyProjects() {
           <h1 className="text-2xl font-bold text-white">My Projects</h1>
           <p className="mt-1 text-sm text-gray-400">Projects you&apos;ve been assigned to.</p>
         </div>
-        <button className="flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400">
-          <Plus className="h-4 w-4" />
-          Create project
-        </button>
+       
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -50,12 +47,7 @@ export default function MyProjects() {
           </article>
         ))}
 
-        <button className="cursor-pointer flex min-h-55 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/15 text-sm text-gray-400 transition-colors hover:border-indigo-400 hover:text-white">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5">
-            <Plus className="h-5 w-5" />
-          </span>
-          Create a project
-        </button>
+      
       </div>
     </div>
   );

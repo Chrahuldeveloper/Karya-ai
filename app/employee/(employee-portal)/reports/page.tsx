@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, Eye, Pencil, Search, X, Save, LoaderCircle } from "lucide-react";
+import { Eye, Pencil, Search, X, Save, LoaderCircle } from "lucide-react";
 import { createClient } from "@/supabase/client";
 
 type Attachment = {
@@ -415,7 +415,6 @@ export default function MyReports() {
         </table>
       </div>
 
-      {/* View / Edit modal */}
       {modal && selectedReport && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"

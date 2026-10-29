@@ -60,9 +60,15 @@ export default function AdminRegisterPage() {
 
       if (error) return setError(error.message);
 
-      if (data) router.push("/admin/dashboard")
+          if (data && data.length > 0) {
+      const admin = data[0];
 
-      
+      sessionStorage.setItem("admin_id", admin.id);
+      sessionStorage.setItem("company_id", admin.id);
+
+      router.push("/admin/dashboard");
+    }
+
     } catch (error) {
       console.log(error)
     }
