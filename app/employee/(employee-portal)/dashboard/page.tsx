@@ -31,6 +31,7 @@ const priorityStyle: Record<string, string> = {
   High: "bg-amber-500/20 text-amber-400",
   Urgent: "bg-red-500/20 text-red-400",
 };
+
 const statusStyle: Record<string, string> = {
   Blocked: "bg-red-500/20 text-red-400",
   "In progress": "bg-indigo-500/20 text-indigo-300",
@@ -82,6 +83,7 @@ export default function Home() {
 
 
   const fullName = employee?.full_name ?? "Employee";
+  
   const initials = fullName
     .trim()
     .split(/\s+/)

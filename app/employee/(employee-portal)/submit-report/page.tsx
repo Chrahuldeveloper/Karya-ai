@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { AlertTriangle, CheckCircle2, ChevronDown, CircleDot, FileText, Upload, X } from "lucide-react";
+import { createClient } from "@/supabase/client";
 
 type Status = "completed" | "in_progress" | "blocked";
 
@@ -11,8 +12,8 @@ const STATUS_OPTIONS: { value: Status; title: string; desc: string; icon: React.
   { value: "blocked", title: "Blocked", desc: "Something is stopping me", icon: <AlertTriangle className="h-5 w-5 text-red-400" /> },
 ];
 
-const PROJECTS = ["Onboarding Revamp", "Mobile App", "Design System"]; 
-const TASKS = ["Account linking screens", "Empty states", "Usability tests"]; 
+const PROJECTS = ["Onboarding Revamp", "Mobile App", "Design System"];
+const TASKS = ["Account linking screens", "Empty states", "Usability tests"];
 
 const fieldClass =
   "w-full rounded-lg border border-white/10 bg-transparent px-3 py-2.5 text-sm text-white placeholder:text-gray-500 outline-none transition-colors focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 [color-scheme:dark]";
@@ -79,6 +80,8 @@ function Select({ id, value, onChange, placeholder, options }: {
 }
 
 export default function SubmitReportForm() {
+
+
   const [form, setForm] = useState({
     title: "",
     date: "",
@@ -109,13 +112,102 @@ export default function SubmitReportForm() {
       setForm((f) => ({ ...f, [key]: e.target.value }));
 
   const addFiles = (list: FileList | null) => {
+
+    if (!list) return;
+
+    const selected = Array.from(list);
+
+    if (selected.some((file) => file.size > 10 * 1024 * 1024)) {
+      setError("Each attachment must be 10 MB or smaller.");
+      return;
+    }
+
+    setError("");
+    setFiles((previous) => [...previous, ...selected]);
+
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-  };
+    try {
+      const supabase = createClient();
+      const userId = sessionStorage.getItem("user_id");
 
-  const handleSaveDraft = () => {
+      if (!userId) {
+        setError("User not found. Please log in again.");
+        return;
+      }
+
+      const attachments = [];
+
+      for (const file of files) {
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const path = `${userId}/${crypto.randomUUID()}-${safeName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("reports")
+          .upload(path, file);
+
+        if (uploadError) {
+          setError(uploadError.message);
+          return;
+        }
+
+        const { data: urlData } = supabase.storage
+          .from("reports")
+          .getPublicUrl(path);
+
+
+        attachments.push({
+          name: file.name,
+          path,
+          url: urlData.publicUrl,
+          size: file.size,
+          type: file.type,
+        });
+      }
+
+      const { data: user, error: fetchError } = await supabase
+        .from("users")
+        .select("reports")
+        .eq("user_id", userId)
+        .single();
+
+      if (fetchError) {
+        setError(fetchError.message);
+        return;
+      }
+
+      const existingReports = Array.isArray(user.reports)
+        ? user.reports
+        : [];
+
+      const newReport = {
+        ...form,
+        attachments,
+        submittedAt: new Date().toISOString(),
+      };
+
+      const { error: updateError } = await supabase
+        .from("users")
+        .update({
+          reports: [...existingReports, newReport],
+        })
+        .eq("user_id", userId);
+
+      if (updateError) {
+        setError(updateError.message);
+        return;
+      }
+
+      alert("saved")
+
+    } catch (error) {
+      console.error(error);
+      setError("Failed to save report.");
+    }
   };
 
   return (
@@ -190,9 +282,8 @@ export default function SubmitReportForm() {
                   role="radio"
                   aria-checked={active}
                   onClick={() => setForm((f) => ({ ...f, status: o.value }))}
-                  className={`rounded-xl  p-4 text-left transition-colors  cursor-pointer  ${
-                    active ? " border border-indigo-400 bg-indigo-500/101 " : "border-white/10 hover:bg-white/5"
-                  }`}
+                  className={`rounded-xl  p-4 text-left transition-colors  cursor-pointer  ${active ? " border border-indigo-400 bg-indigo-500/101 " : "border-white/10 hover:bg-white/5"
+                    }`}
                 >
                   {o.icon}
                   <p className="mt-3 text-sm font-semibold text-white">{o.title}</p>
@@ -231,9 +322,8 @@ export default function SubmitReportForm() {
             onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
             onDragLeave={() => setDragging(false)}
             onDrop={(e) => { e.preventDefault(); setDragging(false); addFiles(e.dataTransfer.files); }}
-            className={`flex flex-col items-center rounded-xl border border-dashed px-4 py-8 text-center transition-colors ${
-              dragging ? "border-indigo-400 bg-indigo-500/10" : "border-white/15"
-            }`}
+            className={`flex flex-col items-center rounded-xl border border-dashed px-4 py-8 text-center transition-colors ${dragging ? "border-indigo-400 bg-indigo-500/10" : "border-white/15"
+              }`}
           >
             <Upload className="mb-3 h-5 w-5 text-gray-300" />
             <p className="text-sm text-gray-300">
@@ -268,10 +358,6 @@ export default function SubmitReportForm() {
           {error && <p role="alert" className="mr-auto text-xs text-red-300">{error}</p>}
           <button type="button" onClick={() => history.back()} className="px-3 py-2 text-sm font-medium text-white hover:text-gray-300">
             Cancel
-          </button>
-          <button type="button" onClick={handleSaveDraft} className="flex items-center gap-2 rounded-lg border border-white/15 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/5">
-            <FileText className="h-4 w-4" />
-            Save Draft
           </button>
           <button type="submit" className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300">
             Submit Report
