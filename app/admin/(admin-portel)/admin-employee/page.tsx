@@ -117,7 +117,6 @@ export default function AdminEmployees() {
     ),
   ].sort((a, b) => a.localeCompare(b));
 
-  // Search and all three dropdown filters work together.
   const filteredEmployees = employees.filter((employee) => {
     const query = searchTerm.trim().toLowerCase();
 
@@ -159,7 +158,6 @@ export default function AdminEmployees() {
         </p>
       </div>
 
-      {/* Search and functional filters */}
       <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[2.4fr_1fr_1fr_1fr]">
         <div className={`${box} justify-start gap-2`}>
           <Search className="h-4 w-4 shrink-0 text-gray-400" />
@@ -173,7 +171,6 @@ export default function AdminEmployees() {
           />
         </div>
 
-        {/* Department dropdown */}
         <div className={`${box} relative`}>
           <select
             aria-label="Filter by department"
@@ -244,9 +241,8 @@ export default function AdminEmployees() {
         </div>
       </div>
 
-      {/* Employee table */}
       <div className="overflow-x-auto rounded-xl border border-white/10 bg-[#101116]">
-        <table className="w-full min-w-[820px] text-left text-sm">
+        <table className="w-full min-w-205 text-left text-sm">
           <thead>
             <tr className="border-b border-white/10 text-xs text-gray-400">
               {[
@@ -438,7 +434,7 @@ export default function AdminEmployees() {
                     className="rounded-lg border border-white/10 p-3"
                   >
                     <p className="text-xs text-gray-400">{item.label}</p>
-                    <p className="mt-1 break-words text-sm text-white">
+                    <p className="mt-1 wrap-break-word text-sm text-white">
                       {item.value}
                     </p>
                   </div>
