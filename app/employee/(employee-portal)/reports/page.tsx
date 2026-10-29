@@ -491,7 +491,7 @@ export default function MyReports() {
                   ].map(([label, value]) => (
                     <div key={label}>
                       <p className={labelStyle}>{label}</p>
-                      <p className="whitespace-pre-wrap break-words text-sm text-white">
+                      <p className="whitespace-pre-wrap wrap-break-word text-sm text-white">
                         {value || "-"}
                       </p>
                     </div>
