@@ -118,7 +118,6 @@ export default function AdminReports() {
 
         const supabase = createClient();
 
-        // Fetch only users belonging to this company.
         const { data: users, error } = await supabase
           .from("users")
           .select("user_id, full_name, email, reports")
@@ -147,7 +146,6 @@ export default function AdminReports() {
           });
         }
 
-        // Most recently submitted reports first.
         rows.sort((a, b) => {
           const dateA = new Date(a.submittedAt ?? a.date ?? 0).getTime();
           const dateB = new Date(b.submittedAt ?? b.date ?? 0).getTime();
@@ -265,7 +263,6 @@ export default function AdminReports() {
         Review work reports submitted by your team.
       </p>
 
-      {/* Status tabs */}
       <div className="mb-4 inline-flex flex-wrap rounded-lg border border-white/10 bg-[#101116] p-1 text-sm">
         {[
           { value: "all", label: "All" },
@@ -287,7 +284,6 @@ export default function AdminReports() {
         ))}
       </div>
 
-      {/* Search and filters */}
       <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[2.4fr_1fr_1fr_1fr]">
         <div className={`${box} justify-start gap-2`}>
           <Search className="h-4 w-4 shrink-0 text-gray-400" />
@@ -355,7 +351,6 @@ export default function AdminReports() {
         </div>
       </div>
 
-      {/* Reports table */}
       <div className="overflow-x-auto rounded-xl border border-white/10 bg-[#101116]">
         <table className="w-full min-w-225 text-left text-sm">
           <thead>
