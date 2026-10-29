@@ -1,6 +1,6 @@
 "use client";
 
-import {  useState } from "react";
+import {  useState , useEffect } from "react";
 import Link from "next/link";
 import { Eye, EyeOff , ChevronDown} from "lucide-react";
 import { createClient } from "@/supabase/client";
@@ -17,9 +17,34 @@ export default function RegisterPage() {
     fullName: "",
     email: "",
     Company:"",
+    company_id : "",
     password: "",
     confirm: "",
+    user_id : "",
+    user_name : ""
   });
+
+  const [companies, setCompanies] = useState<{ id: string; company_name: string }[]>([]);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      const supabase = createClient();
+
+      const { data, error } = await supabase
+        .from("admin")
+        .select("id, company_name");
+
+      if (error) {
+        setError("Failed to load companies.");
+        return;
+      }
+
+      setCompanies(data ?? []);
+    };
+
+    fetchCompanies();
+  }, []);
+
   const [show, setShow] = useState(false);
   
   const [error, setError] = useState<string>("");
@@ -30,31 +55,61 @@ export default function RegisterPage() {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+
+const generateUserId = () => {
+  const uniqueNumber = Math.floor(100000 + Math.random() * 900000);
+  return `K-${uniqueNumber}`;
+};
+
+const handleSubmit = async (e: React.FormEvent) => {
 
     e.preventDefault();
     if (form.password.length < 8 || !/[A-Z]/.test(form.password) || !/\d/.test(form.password)) {
       return setError("Password needs 8+ characters, one uppercase letter and one number.");
     }
+
     if (form.password !== form.confirm) return setError("Passwords don't match.");
 
     try {
       const supabase = createClient()
 
-      const {data,error} = await supabase.from('users') 
-      .insert([
-        { 
-          full_name: form.fullName, 
-          email: form.email,
-          Company :form.Company,
-          password:form.password
-        },
-      ])
-      .select() 
+      const selectedCompany = companies.find(
+        (company) => String(company.id) === String(form.company_id)
+      );
 
-      if (error) return setError(error.message);
+      if (!selectedCompany) {
+        setError("Please select a valid company.");
+        return;
+      }
 
-      if (data) router.push("/employee/dashboard")
+      const { data, error } = await supabase
+        .from("users")
+        .insert([
+          {
+            full_name: form.fullName,
+            email: form.email,
+            Company: selectedCompany.company_name,
+            company_id: selectedCompany.id,
+            user_name: form.user_name,
+            password: form.password,
+            user_id: generateUserId(),
+          },
+        ])
+        .select();
+
+      if (error) {
+        setError(error.message);
+        return;
+      }
+
+      if (data && data.length > 0) {
+      sessionStorage.setItem("user_id", data[0].user_id);
+      sessionStorage.setItem("full_name", data[0].full_name);
+      sessionStorage.setItem("company", data[0].Company);
+      sessionStorage.setItem("company_id", String(data[0].company_id));
+
+      router.push("/employee/dashboard");
+    }
 
     } catch (error) {
       console.log(error)
@@ -83,24 +138,44 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="company" className="text-sm font-semibold">Company</label>
+              <label htmlFor="user Name" className="text-sm font-semibold">User name</label>
+              <input id="user Name" required autoComplete="name" value={form.user_name} onChange={update("user_name")} placeholder="Aisha Verma" className={inputClass} />
+            </div>
+
+            <div>
+              <label htmlFor="company" className="text-sm font-semibold">
+                Company
+              </label>
+
               <div className="relative">
                 <select
                   id="company"
                   required
-                  value={form.Company}
-                  onChange={update("Company")}
-                  className={`${inputClass} appearance-none pr-10 ${form.Company ? "" : "text-gray-500"}`}
+                  value={form.company_id}
+                  onChange={update("company_id")}
+                  className={`${inputClass} appearance-none pr-10 ${
+                    form.company_id ? "" : "text-gray-500"
+                  }`}
                 >
-                  <option value="" className="bg-[#101116]">Select company</option>
-                  <option value="Company A" className="bg-[#101116] text-white">Company A</option>
-                  <option value="Company B" className="bg-[#101116] text-white">Company B</option>
-                  <option value="Other" className="bg-[#101116] text-white">Other</option>
+                  <option value="" className="bg-[#101116]">
+                    Select company
+                  </option>
+
+                  {companies.map((company) => (
+                    <option
+                      key={company.id}
+                      value={company.id}
+                      className="bg-[#101116] text-white"
+                    >
+                      {company.company_name}
+                    </option>
+                  ))}
                 </select>
+
                 <ChevronDown className="pointer-events-none absolute right-3 top-6.5 h-4 w-4 text-gray-400" />
               </div>
             </div>
-
+            
             <div>
               <label htmlFor="email" className="text-sm font-semibold">Work email</label>
               <input id="email" type="email" required autoComplete="email" value={form.email} onChange={update("email")} placeholder="you@company.com" className={inputClass} />

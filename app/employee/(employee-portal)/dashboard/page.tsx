@@ -1,5 +1,9 @@
+"use client";
+
 import { ArrowRight, Bell, Calendar, CheckCircle2, Clock, FileText, FolderKanban } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { createClient } from "@/supabase/client";
 
 const stats = [
   { label: "Reports this week", value: "0", icon: FileText },
@@ -39,19 +43,91 @@ const statusStyle: Record<string, string> = {
 const card = "rounded-xl border border-white/10 bg-[#101116]";
 
 export default function Home() {
+
+  const [employee, setEmployee] = useState<{
+    full_name: string;
+    Company: string;
+  } | null>(null);
+
+  const [now, setNow] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const fetchEmployee = async () => {
+      
+      const userId = sessionStorage.getItem("user_id");
+
+      if (!userId) return;
+
+      const supabase = createClient();
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("full_name, Company")
+        .eq("user_id", userId)
+        .single();
+
+      if (!error && data) setEmployee(data);
+    };
+
+    fetchEmployee();
+
+    setNow(new Date());
+
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 60_000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+
+  const fullName = employee?.full_name ?? "Employee";
+  const initials = fullName
+    .trim()
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const hour = now?.getHours();
+
+  const greeting =
+    hour === undefined
+      ? ""
+      : hour < 12
+        ? "Good morning"
+        : hour < 17
+          ? "Good afternoon"
+          : "Good evening";
+
+  const dateText = now
+    ? now.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
+
   return (
     <div className="mx-auto w-full max-w-6xl space-y-5">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs text-gray-400">Monday, October 26 · Meridian Labs</p>
-          <h1 className="mt-1 text-2xl font-bold text-white">Good evening, Aisha</h1>
-          <p className="mt-1 text-sm text-gray-400">What are you working on today?</p>
+          <p className="text-xs text-gray-400">
+            {dateText} · {employee?.Company ?? "Loading company..."}
+          </p>
+          <h1 className="mt-1 text-2xl font-bold text-white">
+            {greeting}, {fullName}
+          </h1>         
+           <p className="mt-1 text-sm text-gray-400">What are you working on today?</p>
         </div>
         <div className="flex items-center gap-3">
           <button aria-label="Notifications" className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-white">
             <Bell className="h-4 w-4" />
           </button>
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500/20 text-sm font-semibold text-indigo-300">AV</div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500/20 text-sm font-semibold text-indigo-300">
+            {initials}
+          </div>
         </div>
       </div>
 
