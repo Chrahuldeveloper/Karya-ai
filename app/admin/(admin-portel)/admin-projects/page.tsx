@@ -38,8 +38,10 @@ export default function AdminProjects() {
   useEffect(() => {
 
     const fetchData = async () => {
-    const adminId = sessionStorage.getItem("admin_id");
-    const companyId = sessionStorage.getItem("company_id");
+
+    const adminId = localStorage.getItem("company_id");
+
+    const companyId = localStorage.getItem("company_id");
 
     if (
       !adminId ||
@@ -53,6 +55,7 @@ export default function AdminProjects() {
       setLoading(false);
       return;
     }
+
   const supabase = createClient();
 
   const { data: admin, error: projectsError } = await supabase
