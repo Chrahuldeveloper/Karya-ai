@@ -31,7 +31,7 @@ export default function AdminEmployees() {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const companyId = sessionStorage.getItem("company_id");
+        const companyId = localStorage.getItem("company_id");
 
         if (
           !companyId ||

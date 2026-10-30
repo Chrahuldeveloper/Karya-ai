@@ -105,7 +105,7 @@ export default function AdminReports() {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const companyId = sessionStorage.getItem("company_id");
+        const companyId = localStorage.getItem("company_id");
 
         if (
           !companyId ||

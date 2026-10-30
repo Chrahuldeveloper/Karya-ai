@@ -89,7 +89,7 @@ export default function AdminProjects() {
   const createProject = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const adminId = sessionStorage.getItem("admin_id");
+    const adminId = localStorage.getItem("company_id");
     if (!adminId) return;
 
     setSaving(true);

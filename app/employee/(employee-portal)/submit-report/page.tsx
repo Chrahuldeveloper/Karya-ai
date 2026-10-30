@@ -133,7 +133,7 @@ export default function SubmitReportForm() {
 
     try {
       const supabase = createClient();
-      const userId = sessionStorage.getItem("user_id");
+      const userId = localStorage.getItem("user_id");
 
       if (!userId) {
         setError("User not found. Please log in again.");

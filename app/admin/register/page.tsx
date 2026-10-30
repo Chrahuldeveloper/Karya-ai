@@ -147,8 +147,8 @@ export default function AdminRegisterPage() {
       if (data && data.length > 0) {
         const admin = data[0];
 
-        sessionStorage.setItem("admin_id", admin.id);
-        sessionStorage.setItem("company_id", admin.id);
+        localStorage.setItem("admin_id", admin.id);
+        localStorage.setItem("company_id", admin.id);
 
         router.push("/admin/dashboard");
       }

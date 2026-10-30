@@ -89,8 +89,8 @@ export default function AdminTasks() {
     setLoading(true);
 
     try {
-      const adminId = sessionStorage.getItem("admin_id");
-      const companyId = sessionStorage.getItem("company_id");
+      const adminId = localStorage.getItem("company_id");
+      const companyId = localStorage.getItem("company_id");
 
       if (
         !adminId ||
@@ -267,7 +267,7 @@ export default function AdminTasks() {
       return;
     }
 
-    const companyId = sessionStorage.getItem("company_id");
+    const companyId = localStorage.getItem("company_id");
 
     if (!companyId || !/^\d+$/.test(companyId)) {
       setErrorMessage("Invalid company ID. Please sign in again.");

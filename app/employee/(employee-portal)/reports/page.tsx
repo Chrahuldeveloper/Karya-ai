@@ -88,7 +88,7 @@ export default function MyReports() {
 
   useEffect(() => {
     const fetchReports = async () => {
-      const userId = sessionStorage.getItem("user_id");
+      const userId = localStorage.getItem("user_id");
 
       if (!userId) {
         setLoading(false);
@@ -150,7 +150,7 @@ export default function MyReports() {
   };
 
   const saveReport = async () => {
-    const userId = sessionStorage.getItem("user_id");
+    const userId = localStorage.getItem("user_id");
 
     if (!userId || !selectedReport) {
       setErrorMessage("Unable to identify the report or user.");

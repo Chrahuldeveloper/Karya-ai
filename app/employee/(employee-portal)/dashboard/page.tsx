@@ -55,7 +55,7 @@ export default function Home() {
   useEffect(() => {
     const fetchEmployee = async () => {
       
-      const userId = sessionStorage.getItem("user_id");
+      const userId = localStorage.getItem("user_id");
 
       if (!userId) return;
 
