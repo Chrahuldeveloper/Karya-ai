@@ -48,7 +48,7 @@ export default function Sidebar({
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-sm font-bold text-white">
           N
         </div>
-        <span className="text-lg font-bold tracking-widest text-white">NIVO</span>
+        <span className="text-lg font-bold tracking-widest text-white">Karaya Ai</span>
       </div>
 
       <nav className="flex-1 space-y-1 px-4">

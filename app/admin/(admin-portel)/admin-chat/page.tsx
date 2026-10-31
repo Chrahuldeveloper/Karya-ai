@@ -1,4 +1,7 @@
-import { AlertTriangle, ArrowUp, Paperclip, Sparkles } from "lucide-react";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { ArrowUp, Sparkles } from "lucide-react";
 
 const suggestions = [
   "Summarize today's work progress",
@@ -7,151 +10,217 @@ const suggestions = [
   "Which projects are at risk?",
 ];
 
-const projects = [
-  { name: "Atlas Mobile App", progress: 64, note: "On track" },
-  { name: "Pulse Analytics", progress: 38, note: "Slightly behind" },
-  { name: "Brand Refresh 2026", progress: 82, note: "On hold" },
-];
-
-const blocked = [
-  { task: "Accessibility audit of payments flow", who: "Aisha Verma", project: "Atlas Mobile App" },
-  { task: "API rate-limit handling", who: "Meera Iyer", project: "Pulse Analytics" },
-];
-
-const missing = ["Dev Patel", "Meera Iyer", "Tom Becker", "Nina Rossi"];
-
-function AiAvatar() {
-  return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
-      <Sparkles className="h-4 w-4" />
-    </div>
-  );
-}
-
-function UserMessage({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex justify-end">
-      <div className="max-w-[80%] rounded-2xl rounded-br-md bg-indigo-500 px-4 py-2.5 text-sm text-white">{children}</div>
-    </div>
-  );
-}
+type Message = {
+  id: number;
+  role: "user" | "assistant";
+  content: string;
+};
 
 export default function AdminChat() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const companyId = localStorage.getItem("company_id");
+
+    if (companyId) {
+      setUserId(companyId);
+    }
+  }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
+
+  async function sendMessage(text = input) {
+    const content = text.trim();
+
+    if (!content || loading) return;
+
+    if (!userId) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          role: "assistant",
+          content:
+            "Unable to identify your organization. Please log in again and try again.",
+        },
+      ]);
+      return;
+    }
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        role: "user",
+        content,
+      },
+    ]);
+
+    setInput("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          message: content,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to get a response.");
+      }
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          role: "assistant",
+          content: data.answer || "I couldn't generate a response.",
+        },
+      ]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          role: "assistant",
+          content:
+            error instanceof Error
+              ? error.message
+              : "Something went wrong. Please try again.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="mx-auto flex h-[calc(100vh-5rem)] w-full max-w-3xl flex-col">
-      {/* Header */}
       <div className="mb-4 flex items-center gap-3 border-b border-white/10 pb-4">
-        <AiAvatar />
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
+          <Sparkles className="h-4 w-4" />
+        </div>
+
         <div>
-          <h1 className="text-lg font-bold text-white">NIVO Assistant</h1>
-          <p className="text-xs text-gray-400">Ask about work progress, reports, projects and your team.</p>
+          <h1 className="text-lg font-bold text-white">
+            KARYA AI Assistant
+          </h1>
+          <p className="text-xs text-gray-400">
+            Ask about work progress, reports, projects and your team.
+          </p>
         </div>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 space-y-6 overflow-y-auto pr-1">
-        <UserMessage>Give me a summary of today&apos;s work progress.</UserMessage>
+        {messages.length === 0 ? (
+          <div className="flex h-full flex-col items-center justify-center px-4 text-center">
+            <Sparkles className="mb-4 h-8 w-8 text-indigo-400" />
 
-        {/* AI: summary */}
-        <div className="flex gap-3">
-          <AiAvatar />
-          <div className="w-full max-w-[85%] space-y-4">
-            <p className="text-sm leading-relaxed text-gray-200">
-              Here&apos;s where things stand as of 6:00 PM. 31 of 48 employees have submitted their reports, and overall progress is steady across active projects.
+            <h2 className="text-xl font-semibold text-white">
+              How can I help you today?
+            </h2>
+
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-gray-400">
+              Ask questions about your team's work, employee reports, project
+              progress, or pending tasks.
             </p>
-
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { label: "Reports in", value: "31 / 48" },
-                { label: "Pending review", value: "9" },
-                { label: "Blocked tasks", value: "4" },
-              ].map((s) => (
-                <div key={s.label} className="rounded-xl border border-white/10 bg-[#101116] p-3">
-                  <p className="text-xs text-gray-400">{s.label}</p>
-                  <p className="mt-1 text-lg font-bold text-white">{s.value}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="rounded-xl border border-white/10 bg-[#101116]">
-              <p className="border-b border-white/10 px-4 py-3 text-xs font-semibold text-white">Project progress</p>
-              <ul className="space-y-3 p-4">
-                {projects.map((p) => (
-                  <li key={p.name}>
-                    <div className="mb-1.5 flex justify-between text-xs">
-                      <span className="text-white">{p.name}</span>
-                      <span className="text-gray-400">{p.progress}% · {p.note}</span>
-                    </div>
-                    <div className="h-1.5 rounded-full bg-white/10">
-                      <div className="h-full rounded-full bg-indigo-400" style={{ width: `${p.progress}%` }} />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="rounded-xl border border-white/10 bg-[#101116]">
-              <p className="flex items-center gap-2 border-b border-white/10 px-4 py-3 text-xs font-semibold text-white">
-                <AlertTriangle className="h-3.5 w-3.5 text-red-400" />
-                Needs attention
-              </p>
-              <ul className="divide-y divide-white/10">
-                {blocked.map((b) => (
-                  <li key={b.task} className="px-4 py-3">
-                    <p className="text-sm font-semibold text-white">{b.task}</p>
-                    <p className="text-xs text-gray-400">{b.who} · {b.project}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
-        </div>
+        ) : (
+          messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${
+                message.role === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`max-w-[85%] whitespace-pre-wrap wrap-break-word text-sm leading-7 ${
+                  message.role === "user"
+                    ? "rounded-2xl rounded-br-md bg-indigo-500 px-4 py-2.5 text-white"
+                    : "text-gray-200"
+                }`}
+              >
+                {message.content}
+              </div>
+            </div>
+          ))
+        )}
 
-        <UserMessage>Who hasn&apos;t submitted a report today?</UserMessage>
-
-        {/* AI: missing reports */}
-        <div className="flex gap-3">
-          <AiAvatar />
-          <div className="w-full max-w-[85%] space-y-3">
-            <p className="text-sm leading-relaxed text-gray-200">17 employees haven&apos;t submitted yet. Here are the first few:</p>
-            <ul className="flex flex-wrap gap-2">
-              {missing.map((n) => (
-                <li key={n} className="flex items-center gap-2 rounded-full border border-white/10 bg-[#101116] py-1 pl-1 pr-3 text-xs text-white">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-500/20 text-[10px] font-semibold text-indigo-300">
-                    {n.split(" ").map((x) => x[0]).join("")}
-                  </span>
-                  {n}
-                </li>
-              ))}
-            </ul>
+        {loading && (
+          <div className="flex items-center gap-2 text-sm text-gray-400">
+            <Sparkles className="h-4 w-4 animate-pulse text-indigo-400" />
+            <span>KARYA AI is thinking...</span>
           </div>
-        </div>
+        )}
 
-        {/* Typing indicator */}
-        <div className="flex gap-3">
-          <AiAvatar />
-          <div className="flex items-center gap-1 rounded-2xl bg-[#101116] px-4 py-3">
-            <span className="h-1.5 w-1.5 rounded-full bg-gray-400" />
-            <span className="h-1.5 w-1.5 rounded-full bg-gray-500" />
-            <span className="h-1.5 w-1.5 rounded-full bg-gray-600" />
-          </div>
-        </div>
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Suggestions + input */}
       <div className="pt-4">
         <div className="mb-3 flex flex-wrap gap-2">
-          {suggestions.map((s) => (
-            <span key={s} className="rounded-full border border-white/10 bg-[#101116] px-3 py-1.5 text-xs text-gray-300">{s}</span>
+          {suggestions.map((suggestion) => (
+            <button
+              key={suggestion}
+              type="button"
+              onClick={() => sendMessage(suggestion)}
+              disabled={loading || !userId}
+              className="rounded-full border border-white/10 bg-[#101116] px-3 py-1.5 text-xs text-gray-300 transition hover:border-indigo-400/50 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {suggestion}
+            </button>
           ))}
         </div>
-        <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-[#101116] px-3 py-2.5">
-          <Paperclip className="h-4 w-4 text-gray-400" />
-          <span className="flex-1 text-sm text-gray-500">Ask about progress, reports or projects…</span>
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-white">
+
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            sendMessage();
+          }}
+          className="flex items-end gap-2 rounded-xl border border-white/10 bg-[#101116] px-3 py-2.5 focus-within:border-indigo-400/50"
+        >
+          <textarea
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+              }
+            }}
+            placeholder="Ask about progress, reports or projects..."
+            rows={1}
+            disabled={loading || !userId}
+            className="max-h-32 min-h-8 flex-1 resize-none bg-transparent py-1.5 text-sm text-white outline-none placeholder:text-gray-500 disabled:opacity-50"
+          />
+
+          <button
+            type="submit"
+            aria-label="Send message"
+            disabled={!input.trim() || loading || !userId}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-500 text-white transition hover:bg-indigo-400 disabled:cursor-not-allowed disabled:opacity-40"
+          >
             <ArrowUp className="h-4 w-4" />
-          </span>
-        </div>
+          </button>
+        </form>
+
+        <p className="mt-2 text-center text-[11px] text-gray-500">
+          AI can make mistakes. Verify important information.
+        </p>
       </div>
     </div>
   );

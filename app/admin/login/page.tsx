@@ -5,7 +5,7 @@ export default function AdminLogin() {
       <div className="w-full max-w-md">
         <div className="mb-8 flex items-center justify-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500 text-sm font-bold">N</div>
-          <span className="text-xl font-bold tracking-widest">NIVO</span>
+          <span className="text-xl font-bold tracking-widest">Karaya Ai</span>
           <span className="rounded-md bg-indigo-500/20 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-indigo-300">Admin</span>
         </div>
         <div className="rounded-xl border border-white/10 bg-[#101116]">
