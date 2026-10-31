@@ -35,6 +35,7 @@ const box =
   "flex h-10 items-center justify-between rounded-lg border border-white/10 bg-[#101116] px-3 text-sm text-gray-300";
 
 export default function MyWork() {
+  
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -81,7 +82,6 @@ export default function MyWork() {
 
         const work = data.work;
 
-        // Handle work stored as a JSONB array.
         let parsedWork: unknown = work;
 
         if (typeof work === "string") {
@@ -187,7 +187,6 @@ export default function MyWork() {
   const formatDueDate = (due: string) => {
     if (!due) return "No due date";
 
-    // Format date without timezone shifts.
     const parts = due.split("-");
 
     if (parts.length === 3) {
