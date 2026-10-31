@@ -51,7 +51,7 @@ export default function AdminProjects() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const adminId = localStorage.getItem("admin_id");
+        const adminId = localStorage.getItem("company_id");
         const companyId = localStorage.getItem("company_id");
 
         if (
@@ -286,7 +286,7 @@ export default function AdminProjects() {
 
         <div className="rounded-xl border border-white/10 bg-[#101116] p-4">
           <p className="text-xs text-gray-400">Active projects</p>
-          <p className="mt-2 text-2xl font-bold text-emerald-400">
+          <p className="mt-2 text-2xl font-bold text-white">
             {projects.filter((project) => project.status === "Active").length}
           </p>
         </div>
