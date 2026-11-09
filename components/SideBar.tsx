@@ -21,7 +21,6 @@ const NAV_ITEMS = [
   { label: "Submit Report", href: "/employee/submit-report", icon: FilePlus2 },
   { label: "My Reports", href: "/employee/reports", icon: FileText },
   { label: "My Projects", href: "/employee/projects", icon: FolderKanban },
-  { label: "Notifications", href: "/employee/notifications", icon: Bell },
   { label: "My Profile", href: "/employee/profile", icon: User },
 ];
 
