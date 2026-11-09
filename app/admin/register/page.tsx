@@ -21,9 +21,16 @@ import {
 } from "lucide-react";
 import { createClient } from "@/supabase/client";
 import { useRouter } from "next/navigation";
+import bcrypt from "bcryptjs";
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/10 bg-[#101116] px-4 py-3 text-sm text-white placeholder:text-gray-500 outline-none transition-all focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20";
+  "w-full rounded-xl border border-white/10 bg-[#101116] px-4 py-3 text-sm text-white placeholder:text-gray-500 outline-none transition-all [color-scheme:dark] focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20";
+
+const labelClass = "mb-2 block text-sm font-medium text-gray-300";
+const iconLeft =
+  "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500";
+const iconRight =
+  "pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400";
 
 const INDUSTRIES = [
   "Technology",
@@ -121,6 +128,7 @@ export default function AdminRegisterPage() {
 
     try {
       const supabase = createClient();
+      const hashedPassword = await bcrypt.hash(form.password, 10);
 
       const { data, error: supabaseError } = await supabase
         .from("admin")
@@ -132,8 +140,8 @@ export default function AdminRegisterPage() {
             company_address: form.address,
             company_size: form.size,
             industry: form.industry,
-            work_email: form.email,
-            password: form.password,
+            work_email: form.email.trim().toLowerCase(),
+            password: hashedPassword,
             roles,
           },
         ])
@@ -161,42 +169,46 @@ export default function AdminRegisterPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#08090d] text-white">
-      <div className="grid min-h-screen lg:grid-cols-[0.85fr_1.15fr]">
-        <aside className="relative hidden flex-col justify-between overflow-hidden border-r border-white/10 bg-[#08090d] p-10 lg:flex xl:p-14">
-          <div className="absolute -left-32 top-32 h-96 w-96 rounded-full bg-indigo-500/10 blur-[120px]" />
+    <main className="h-screen overflow-y-auto bg-[#08090d] text-white">
+      <div className="grid min-h-full lg:grid-cols-[0.85fr_1.15fr]">
+
+        <aside className="relative top-0 hidden h-screen flex-col justify-center overflow-hidden border-r border-white/10 bg-[#08090d] px-8 py-6 lg:sticky lg:flex xl:px-12">
+
+          <div className="absolute -left-32 top-20 h-80 w-80 rounded-full bg-indigo-500/10 blur-[120px]" />
           <div className="absolute -bottom-32 -right-20 h-80 w-80 rounded-full bg-indigo-500/10 blur-[100px]" />
 
-          <div className="relative z-10">
+          <div className="relative z-10 mb-8">
             <Link href="/" className="inline-flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500 text-lg font-bold shadow-lg shadow-indigo-500/20">
                 K
               </div>
+
               <span className="text-xl font-bold tracking-[0.2em]">
                 KARYA
               </span>
             </Link>
           </div>
 
-          <div className="relative z-10 max-w-lg ">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-500/10 px-3 py-1.5 text-xs font-medium text-indigo-300">
+          <div className="relative z-10 max-w-lg">
+
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-500/10 px-3 py-1.5 text-xs font-medium text-indigo-300">
               <ShieldCheck className="h-4 w-4" />
               Organization management
             </div>
 
-            <h1 className="text-4xl font-semibold leading-tight tracking-tight xl:text-5xl">
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight xl:text-4xl">
               Build a more
               <span className="block text-indigo-400">
                 connected workplace.
               </span>
             </h1>
 
-            <p className="mt-6 max-w-md text-base leading-7 text-gray-400">
+            <p className="mt-4 max-w-md text-sm leading-6 text-gray-400">
               Create your organization, define company roles, and give your
               team a place to share work and stay aligned.
             </p>
 
-            <div className="mt-10 space-y-5">
+            <div className="mt-6 space-y-4">
               {[
                 {
                   icon: Building2,
@@ -211,17 +223,23 @@ export default function AdminRegisterPage() {
                 {
                   icon: BriefcaseBusiness,
                   title: "One workspace",
-                  description: "Prepare your team for a more organized way to work.",
+                  description:
+                    "Prepare your team for a more organized way to work.",
                 },
               ].map((item) => (
-                <div key={item.title} className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-[#101116] text-indigo-300">
-                    <item.icon className="h-5 w-5" />
+                <div
+                  key={item.title}
+                  className="flex items-start gap-3"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-[#101116] text-indigo-300">
+                    <item.icon className="h-4 w-4" />
                   </div>
+
                   <div>
                     <h3 className="text-sm font-semibold text-gray-200">
                       {item.title}
                     </h3>
+
                     <p className="mt-1 text-sm leading-5 text-gray-500">
                       {item.description}
                     </p>
@@ -231,20 +249,20 @@ export default function AdminRegisterPage() {
             </div>
           </div>
 
-
         </aside>
 
-        {/* Registration form */}
         <section className="flex min-h-screen items-center justify-center px-4 py-10 sm:px-8 lg:px-10 xl:px-16">
           <div className="w-full max-w-2xl">
-            {/* Mobile branding */}
+
             <div className="mb-8 flex items-center gap-3 lg:hidden">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500 text-lg font-bold">
                 K
               </div>
+
               <span className="text-xl font-bold tracking-[0.2em]">
                 KARYA
               </span>
+
               <span className="rounded-md bg-indigo-500/20 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-indigo-300">
                 Admin
               </span>
@@ -270,7 +288,6 @@ export default function AdminRegisterPage() {
               onSubmit={handleSubmit}
               className="space-y-8 rounded-2xl border border-white/10 bg-[#101116] p-5 shadow-2xl shadow-black/20 sm:p-8"
             >
-              {/* Company details */}
               <fieldset className="space-y-5">
                 <legend className="mb-5 flex items-center gap-2 text-sm font-semibold text-gray-200">
                   <Building2 className="h-4 w-4 text-indigo-400" />
@@ -279,12 +296,10 @@ export default function AdminRegisterPage() {
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
-                    <label
-                      htmlFor="companyName"
-                      className="text-sm font-medium text-gray-300"
-                    >
+                    <label htmlFor="companyName" className={labelClass}>
                       Company name <span className="text-indigo-400">*</span>
                     </label>
+
                     <input
                       id="companyName"
                       required
@@ -296,14 +311,13 @@ export default function AdminRegisterPage() {
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="website"
-                      className="text-sm font-medium text-gray-300"
-                    >
+                    <label htmlFor="website" className={labelClass}>
                       Website
                     </label>
+
                     <div className="relative">
-                      <Globe className="pointer-events-none absolute left-3 top-5 h-4 w-4 text-gray-500" />
+                      <Globe className={iconLeft} />
+
                       <input
                         id="website"
                         type="url"
@@ -318,12 +332,10 @@ export default function AdminRegisterPage() {
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
-                    <label
-                      htmlFor="industry"
-                      className="text-sm font-medium text-gray-300"
-                    >
+                    <label htmlFor="industry" className={labelClass}>
                       Industry <span className="text-indigo-400">*</span>
                     </label>
+
                     <div className="relative">
                       <select
                         id="industry"
@@ -331,12 +343,13 @@ export default function AdminRegisterPage() {
                         value={form.industry}
                         onChange={update("industry")}
                         className={`${inputClass} appearance-none pr-10 ${
-                          form.industry ? "" : "text-gray-500"
+                          form.industry ? "" : "text-gray-500!"
                         }`}
                       >
                         <option value="" className="bg-[#101116]">
                           Select industry
                         </option>
+
                         {INDUSTRIES.map((industry) => (
                           <option
                             key={industry}
@@ -347,17 +360,16 @@ export default function AdminRegisterPage() {
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-5 h-4 w-4 text-gray-400" />
+
+                      <ChevronDown className={iconRight} />
                     </div>
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="size"
-                      className="text-sm font-medium text-gray-300"
-                    >
+                    <label htmlFor="size" className={labelClass}>
                       Company size <span className="text-indigo-400">*</span>
                     </label>
+
                     <div className="relative">
                       <select
                         id="size"
@@ -365,12 +377,13 @@ export default function AdminRegisterPage() {
                         value={form.size}
                         onChange={update("size")}
                         className={`${inputClass} appearance-none pr-10 ${
-                          form.size ? "" : "text-gray-500"
+                          form.size ? "" : "text-gray-500!"
                         }`}
                       >
                         <option value="" className="bg-[#101116]">
                           Select company size
                         </option>
+
                         {SIZES.map((size) => (
                           <option
                             key={size}
@@ -381,20 +394,20 @@ export default function AdminRegisterPage() {
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-5 h-4 w-4 text-gray-400" />
+
+                      <ChevronDown className={iconRight} />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="address"
-                    className="text-sm font-medium text-gray-300"
-                  >
+                  <label htmlFor="address" className={labelClass}>
                     Company address
                   </label>
+
                   <div className="relative">
-                    <MapPin className="pointer-events-none absolute left-3 top-5 h-4 w-4 text-gray-500" />
+                    <MapPin className={iconLeft} />
+
                     <input
                       id="address"
                       value={form.address}
@@ -406,7 +419,6 @@ export default function AdminRegisterPage() {
                 </div>
               </fieldset>
 
-              {/* Company roles */}
               <fieldset className="space-y-4 border-t border-white/10 pt-7">
                 <legend className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-200">
                   <Users className="h-4 w-4 text-indigo-400" />
@@ -418,7 +430,7 @@ export default function AdminRegisterPage() {
                   be assigned these roles later.
                 </p>
 
-                <div className="flex items-start gap-2">
+                <div className="flex items-center gap-2">
                   <input
                     id="newRole"
                     type="text"
@@ -431,13 +443,13 @@ export default function AdminRegisterPage() {
                       }
                     }}
                     placeholder="e.g. Manager, Developer, HR"
-                    className={inputClass}
+                    className={`${inputClass} min-w-0 flex-1`}
                   />
 
                   <button
                     type="button"
                     onClick={addRole}
-                    className="mt-2 flex shrink-0 items-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300"
+                    className="flex shrink-0 items-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300"
                   >
                     <Plus className="h-4 w-4" />
                     Add
@@ -452,6 +464,7 @@ export default function AdminRegisterPage() {
                         className="flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-500/10 px-3 py-1.5 text-sm text-indigo-300"
                       >
                         {role}
+
                         <button
                           type="button"
                           onClick={() => removeRole(role)}
@@ -474,7 +487,6 @@ export default function AdminRegisterPage() {
                 </p>
               </fieldset>
 
-              {/* Administrator details */}
               <fieldset className="space-y-5 border-t border-white/10 pt-7">
                 <legend className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-200">
                   <UserRound className="h-4 w-4 text-indigo-400" />
@@ -483,12 +495,10 @@ export default function AdminRegisterPage() {
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
-                    <label
-                      htmlFor="fullName"
-                      className="text-sm font-medium text-gray-300"
-                    >
+                    <label htmlFor="fullName" className={labelClass}>
                       Full name <span className="text-indigo-400">*</span>
                     </label>
+
                     <input
                       id="fullName"
                       required
@@ -501,14 +511,13 @@ export default function AdminRegisterPage() {
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="email"
-                      className="text-sm font-medium text-gray-300"
-                    >
+                    <label htmlFor="email" className={labelClass}>
                       Work email <span className="text-indigo-400">*</span>
                     </label>
+
                     <div className="relative">
-                      <Mail className="pointer-events-none absolute left-3 top-5 h-4 w-4 text-gray-500" />
+                      <Mail className={iconLeft} />
+
                       <input
                         id="email"
                         type="email"
@@ -525,14 +534,13 @@ export default function AdminRegisterPage() {
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
-                    <label
-                      htmlFor="password"
-                      className="text-sm font-medium text-gray-300"
-                    >
+                    <label htmlFor="password" className={labelClass}>
                       Password <span className="text-indigo-400">*</span>
                     </label>
+
                     <div className="relative">
-                      <LockKeyhole className="pointer-events-none absolute left-3 top-5 h-4 w-4 text-gray-500" />
+                      <LockKeyhole className={iconLeft} />
+
                       <input
                         id="password"
                         type={show ? "text" : "password"}
@@ -543,11 +551,12 @@ export default function AdminRegisterPage() {
                         placeholder="Create a strong password"
                         className={`${inputClass} pl-10 pr-11`}
                       />
+
                       <button
                         type="button"
                         onClick={() => setShow((prev) => !prev)}
                         aria-label={show ? "Hide password" : "Show password"}
-                        className="absolute right-3 top-5 text-gray-400 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded text-gray-400 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
                       >
                         {show ? (
                           <EyeOff className="h-4 w-4" />
@@ -559,13 +568,11 @@ export default function AdminRegisterPage() {
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="confirm"
-                      className="text-sm font-medium text-gray-300"
-                    >
+                    <label htmlFor="confirm" className={labelClass}>
                       Confirm password{" "}
                       <span className="text-indigo-400">*</span>
                     </label>
+
                     <input
                       id="confirm"
                       type={show ? "text" : "password"}
@@ -580,8 +587,8 @@ export default function AdminRegisterPage() {
                 </div>
 
                 <p className="text-xs leading-5 text-gray-500">
-                  Use at least 8 characters, including one uppercase letter and
-                  one number.
+                  Use at least 8 characters, including one uppercase letter
+                  and one number.
                 </p>
               </fieldset>
 
@@ -600,6 +607,7 @@ export default function AdminRegisterPage() {
                 className="group flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-indigo-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? "Creating account..." : "Create admin account"}
+
                 {!loading && (
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 )}
@@ -620,7 +628,6 @@ export default function AdminRegisterPage() {
                 Sign in
               </Link>
             </p>
-
           </div>
         </section>
       </div>

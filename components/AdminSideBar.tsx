@@ -40,7 +40,6 @@ export default function AdminSidebar() {
 
   const profileRef = useRef<HTMLDivElement>(null);
 
-  // Load the administrator using company_id from localStorage.
   useEffect(() => {
     let cancelled = false;
 
@@ -84,13 +83,11 @@ export default function AdminSidebar() {
     };
   }, []);
 
-  // Close the mobile sidebar and profile dropdown after navigation.
   useEffect(() => {
     setMobileOpen(false);
     setProfileOpen(false);
   }, [pathname]);
 
-  // Lock background scrolling and support Escape while mobile menu is open.
   useEffect(() => {
     if (!mobileOpen) return;
 
@@ -112,7 +109,6 @@ export default function AdminSidebar() {
     };
   }, [mobileOpen]);
 
-  // Close the profile dropdown when clicking outside it.
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -152,7 +148,6 @@ export default function AdminSidebar() {
 
   return (
     <>
-      {/* Mobile hamburger button */}
       <button
         type="button"
         onClick={() => setMobileOpen(true)}
@@ -164,7 +159,6 @@ export default function AdminSidebar() {
         <Menu className="h-5 w-5" />
       </button>
 
-      {/* Mobile backdrop */}
       <div
         aria-hidden="true"
         onClick={() => setMobileOpen(false)}
@@ -175,7 +169,6 @@ export default function AdminSidebar() {
         }`}
       />
 
-      {/* Sidebar */}
       <aside
         id="admin-sidebar"
         aria-label="Admin navigation"
@@ -184,7 +177,6 @@ export default function AdminSidebar() {
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Brand */}
         <div className="flex items-center gap-3 px-6 py-6">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-500 text-sm font-bold text-white shadow-lg shadow-indigo-500/20">
             N
@@ -194,11 +186,6 @@ export default function AdminSidebar() {
             Karaya Ai
           </span>
 
-          <span className="rounded-md border border-indigo-400/20 bg-indigo-500/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-indigo-300">
-            Admin
-          </span>
-
-          {/* Mobile close button */}
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
@@ -209,7 +196,6 @@ export default function AdminSidebar() {
           </button>
         </div>
 
-        {/* Navigation links */}
         <nav className="flex-1 space-y-1 overflow-y-auto px-4 pb-4">
           <p className="mb-3 px-3 pt-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500">
             Workspace
@@ -269,7 +255,6 @@ export default function AdminSidebar() {
             aria-hidden={!profileOpen}
           >
             <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#17181f] p-2 shadow-2xl shadow-black/40">
-              {/* User details */}
               <div className="flex items-center gap-3 rounded-xl px-3 py-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/15 text-sm font-semibold text-indigo-300 ring-1 ring-indigo-400/20">
                   {initials}
@@ -327,7 +312,6 @@ export default function AdminSidebar() {
             </div>
           </div>
 
-          {/* Profile toggle */}
           <button
             type="button"
             onClick={() => setProfileOpen((open) => !open)}
