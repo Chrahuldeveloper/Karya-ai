@@ -9,7 +9,6 @@ import {
   FilePlus2,
   FileText,
   FolderKanban,
-  Bell,
   User,
   LogOut,
 } from "lucide-react";
