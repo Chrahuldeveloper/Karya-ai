@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -12,6 +13,7 @@ import {
   User,
   LogOut,
 } from "lucide-react";
+import { createClient } from "@/supabase/client";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/employee/dashboard", icon: Home },
@@ -24,17 +26,52 @@ const NAV_ITEMS = [
 ];
 
 type SidebarProps = {
-  userName?: string;
-  userRole?: string;
   onLogout?: () => void;
 };
 
-export default function Sidebar({
-  userName = "Aisha Verma",
-  userRole = "Product Designer",
-  onLogout,
-}: SidebarProps) {
+export default function Sidebar({ onLogout }: SidebarProps) {
   const pathname = usePathname();
+
+  const [userName, setUserName] = useState("Loading...");
+  const [userRole, setUserRole] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userId = localStorage.getItem("user_id");
+
+        if (!userId) {
+          setUserName("Employee");
+          setUserRole("");
+          return;
+        }
+
+        const supabase = createClient();
+
+        const { data, error } = await supabase
+          .from("users")
+          .select("full_name, role")
+          .eq("user_id", userId)
+          .single();
+
+        if (error) {
+          console.error("Error fetching employee:", error);
+          setUserName("Employee");
+          return;
+        }
+
+        setUserName(data.full_name || "Employee");
+        setUserRole(data.role || "Employee");
+
+      } catch (error) {
+        console.error("Error:", error);
+        setUserName("Employee");
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const initials = userName
     .split(" ")
     .map((n) => n[0])
@@ -44,16 +81,20 @@ export default function Sidebar({
 
   return (
     <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-white/10 bg-[#0e0f13]">
+
       <div className="flex items-center gap-3 px-6 py-6">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-sm font-bold text-white">
           N
         </div>
-        <span className="text-lg font-bold tracking-widest text-white">Karaya Ai</span>
+        <span className="text-lg font-bold tracking-widest text-white">
+          Karaya Ai
+        </span>
       </div>
 
       <nav className="flex-1 space-y-1 px-4">
         {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
-          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+          const active = pathname.startsWith(href);
+
           return (
             <Link
               key={href}
@@ -65,7 +106,11 @@ export default function Sidebar({
                   : "text-gray-400 hover:bg-white/5 hover:text-white"
               }`}
             >
-              <Icon className={`h-4.5  w-4.5 ${active ? "text-indigo-400" : ""}`} />
+              <Icon
+                className={`h-4.5 w-4.5 ${
+                  active ? "text-indigo-400" : ""
+                }`}
+              />
               {label}
             </Link>
           );
@@ -73,13 +118,20 @@ export default function Sidebar({
       </nav>
 
       <div className="flex items-center gap-3 border-t border-white/10 px-5 py-4">
+
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500/20 text-sm font-semibold text-indigo-300">
           {initials}
         </div>
+
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-white">{userName}</p>
-          <p className="truncate text-xs text-gray-400">{userRole}</p>
+          <p className="truncate text-sm font-semibold text-white">
+            {userName}
+          </p>
+          <p className="truncate text-xs text-gray-400">
+            {userRole}
+          </p>
         </div>
+
         <button
           onClick={onLogout}
           aria-label="Log out"
@@ -87,6 +139,7 @@ export default function Sidebar({
         >
           <LogOut className="h-4 w-4" />
         </button>
+
       </div>
     </aside>
   );

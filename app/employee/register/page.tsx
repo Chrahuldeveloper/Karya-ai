@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/supabase/client";
 import { useRouter } from "next/navigation";
+import bcrypt from "bcryptjs";
 
 type Company = {
   id: string;
@@ -195,18 +197,22 @@ export default function EmployeeRegister() {
       const userId = generateUserId();
       const userName = form.fullName.trim();
 
-      const { error: insertError } = await supabase.from("users").insert([
-        {
-          full_name: userName,
-          email: form.email.trim(),
-          Company: selectedCompany.company_name,
-          role: form.role,
-          company_id: form.company_id,
-          user_name: userName,
-          password: form.password,
-          user_id: userId,
-        },
-      ]);
+      const hashedPassword = await bcrypt.hash(form.password, 12);
+
+      const { error: insertError } = await supabase
+        .from("users")
+        .insert([
+          {
+            full_name: userName,
+            email: form.email.trim(),
+            Company: selectedCompany.company_name,
+            role: form.role,
+            company_id: form.company_id,
+            user_name: userName,
+            password: hashedPassword,
+            user_id: userId,
+          },
+        ]);
 
       if (insertError) {
         console.error("Employee registration error:", insertError);
@@ -232,6 +238,7 @@ export default function EmployeeRegister() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#08090d] px-4 py-10 text-white sm:px-6">
       <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-[#111218] shadow-2xl lg:grid-cols-[0.85fr_1.15fr]">
+
         <section className="relative hidden flex-col justify-between overflow-hidden bg-[#08090d] p-10 text-white lg:flex">
           <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-indigo-500/20 blur-3xl" />
           <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl" />
@@ -282,13 +289,13 @@ export default function EmployeeRegister() {
               </div>
             ))}
 
-            <div className="border-t border-white/10 pt-5 text-xs text-gray-500">
-            </div>
+            <div className="border-t border-white/10 pt-5 text-xs text-gray-500" />
           </div>
         </section>
 
         <section className="px-6 py-8 sm:px-10 sm:py-12 lg:px-12">
           <div className="mx-auto max-w-md">
+
             <Link
               href="/"
               className="mb-8 inline-flex items-center gap-3 lg:hidden"
@@ -317,19 +324,14 @@ export default function EmployeeRegister() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+
               <div>
-                <label
-                  htmlFor="fullName"
-                  className="mb-2 block text-sm font-semibold text-gray-200"
-                >
+                <label htmlFor="fullName" className="mb-2 block text-sm font-semibold text-gray-200">
                   Full name
                 </label>
 
                 <div className="relative">
-                  <UserRound
-                    size={18}
-                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-                  />
+                  <UserRound size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
 
                   <input
                     id="fullName"
@@ -345,18 +347,12 @@ export default function EmployeeRegister() {
               </div>
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="mb-2 block text-sm font-semibold text-gray-200"
-                >
+                <label htmlFor="email" className="mb-2 block text-sm font-semibold text-gray-200">
                   Work email
                 </label>
 
                 <div className="relative">
-                  <Mail
-                    size={18}
-                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-                  />
+                  <Mail size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
 
                   <input
                     id="email"
@@ -372,18 +368,12 @@ export default function EmployeeRegister() {
               </div>
 
               <div>
-                <label
-                  htmlFor="company_id"
-                  className="mb-2 block text-sm font-semibold text-gray-200"
-                >
+                <label htmlFor="company_id" className="mb-2 block text-sm font-semibold text-gray-200">
                   Company
                 </label>
 
                 <div className="relative">
-                  <Building2
-                    size={18}
-                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-                  />
+                  <Building2 size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
 
                   <select
                     id="company_id"
@@ -391,9 +381,7 @@ export default function EmployeeRegister() {
                     value={form.company_id}
                     onChange={update("company_id")}
                     disabled={companiesLoading}
-                    className={`${inputClass} appearance-none pl-11 pr-10 ${
-                      form.company_id ? "" : "text-gray-500"
-                    }`}
+                    className={`${inputClass} appearance-none pl-11 pr-10 ${form.company_id ? "" : "text-gray-500"}`}
                   >
                     <option value="" className="bg-[#101116] text-white">
                       {companiesLoading
@@ -404,36 +392,23 @@ export default function EmployeeRegister() {
                     </option>
 
                     {companies.map((company) => (
-                      <option
-                        key={company.id}
-                        value={company.id}
-                        className="bg-[#101116] text-white"
-                      >
+                      <option key={company.id} value={company.id} className="bg-[#101116] text-white">
                         {company.company_name}
                       </option>
                     ))}
                   </select>
 
-                  <ChevronDown
-                    size={17}
-                    className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-                  />
+                  <ChevronDown size={17} className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
                 </div>
               </div>
 
               <div>
-                <label
-                  htmlFor="role"
-                  className="mb-2 block text-sm font-semibold text-gray-200"
-                >
+                <label htmlFor="role" className="mb-2 block text-sm font-semibold text-gray-200">
                   Role in the company
                 </label>
 
                 <div className="relative">
-                  <BriefcaseBusiness
-                    size={18}
-                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-                  />
+                  <BriefcaseBusiness size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
 
                   <select
                     id="role"
@@ -441,9 +416,7 @@ export default function EmployeeRegister() {
                     value={form.role}
                     onChange={update("role")}
                     disabled={!form.company_id || companiesLoading}
-                    className={`${inputClass} appearance-none pl-11 pr-10 ${
-                      form.role ? "" : "text-gray-500"
-                    }`}
+                    className={`${inputClass} appearance-none pl-11 pr-10 ${form.role ? "" : "text-gray-500"}`}
                   >
                     <option value="" className="bg-[#101116] text-white">
                       {!form.company_id
@@ -454,36 +427,23 @@ export default function EmployeeRegister() {
                     </option>
 
                     {availableRoles.map((role) => (
-                      <option
-                        key={role}
-                        value={role}
-                        className="bg-[#101116] text-white"
-                      >
+                      <option key={role} value={role} className="bg-[#101116] text-white">
                         {role}
                       </option>
                     ))}
                   </select>
 
-                  <ChevronDown
-                    size={17}
-                    className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-                  />
+                  <ChevronDown size={17} className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
                 </div>
               </div>
 
               <div>
-                <label
-                  htmlFor="password"
-                  className="mb-2 block text-sm font-semibold text-gray-200"
-                >
+                <label htmlFor="password" className="mb-2 block text-sm font-semibold text-gray-200">
                   Password
                 </label>
 
                 <div className="relative">
-                  <LockKeyhole
-                    size={18}
-                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-                  />
+                  <LockKeyhole size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
 
                   <input
                     id="password"
@@ -508,18 +468,12 @@ export default function EmployeeRegister() {
               </div>
 
               <div>
-                <label
-                  htmlFor="confirm"
-                  className="mb-2 block text-sm font-semibold text-gray-200"
-                >
+                <label htmlFor="confirm" className="mb-2 block text-sm font-semibold text-gray-200">
                   Confirm password
                 </label>
 
                 <div className="relative">
-                  <LockKeyhole
-                    size={18}
-                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-                  />
+                  <LockKeyhole size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
 
                   <input
                     id="confirm"
@@ -535,27 +489,16 @@ export default function EmployeeRegister() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    aria-label={
-                      showConfirmPassword
-                        ? "Hide confirm password"
-                        : "Show confirm password"
-                    }
+                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-white"
                   >
-                    {showConfirmPassword ? (
-                      <EyeOff size={18} />
-                    ) : (
-                      <Eye size={18} />
-                    )}
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
 
               {error && (
-                <div
-                  role="alert"
-                  className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-400"
-                >
+                <div role="alert" className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-400">
                   {error}
                 </div>
               )}
@@ -568,10 +511,7 @@ export default function EmployeeRegister() {
                 {loading ? "Creating your account..." : "Create account"}
 
                 {!loading && (
-                  <ArrowRight
-                    size={18}
-                    className="transition-transform group-hover:translate-x-1"
-                  />
+                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                 )}
               </button>
 
@@ -584,18 +524,12 @@ export default function EmployeeRegister() {
             <div className="mt-7 border-t border-white/10 pt-6 text-center">
               <p className="text-sm text-gray-400">
                 Already have an account?{" "}
-                <Link
-                  href="/employee/login"
-                  className="font-semibold text-indigo-400 transition hover:text-indigo-300"
-                >
+                <Link href="/employee/login" className="font-semibold text-indigo-400 transition hover:text-indigo-300">
                   Sign in
                 </Link>
               </p>
             </div>
 
-            <p className="mt-8 text-center text-xs text-gray-500 lg:hidden">
-              © {new Date().getFullYear()} KARYA
-            </p>
           </div>
         </section>
       </div>

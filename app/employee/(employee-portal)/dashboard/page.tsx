@@ -399,7 +399,6 @@ export default function Home() {
 
   return (
     <main className="mx-auto w-full max-w-6xl space-y-6 pb-10 text-white">
-      {/* Header */}
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs text-gray-400">
@@ -463,7 +462,6 @@ export default function Home() {
 
       {!loading && !error && (
         <>
-          {/* Statistics */}
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {stats.map((stat) => {
               const Icon = stat.icon;
