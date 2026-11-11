@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,11 +6,11 @@ import {
   Eye,
   EyeOff,
   ChevronDown,
-  BriefcaseBusiness,
   UserRound,
   Mail,
   LockKeyhole,
   Building2,
+  BriefcaseBusiness,
   ArrowRight,
   CheckCircle2,
 } from "lucide-react";
@@ -99,7 +98,7 @@ export default function EmployeeRegister() {
   const [error, setError] = useState("");
 
   const inputClass =
-    "w-full rounded-xl border border-white/10 bg-[#101116] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-gray-500 hover:border-white/20 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 disabled:cursor-not-allowed disabled:bg-[#15161c]";
+    "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-gray-500 hover:border-white/20 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 disabled:cursor-not-allowed disabled:opacity-60";
 
   useEffect(() => {
     let cancelled = false;
@@ -235,104 +234,93 @@ export default function EmployeeRegister() {
     }
   };
 
+  const iconLeft =
+    "pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-500";
+  const iconRight =
+    "pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500";
+  const labelClass = "mb-2 block text-sm font-medium text-gray-200";
+
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#08090d] px-4 py-10 text-white sm:px-6">
-      <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-[#111218] shadow-2xl lg:grid-cols-[0.85fr_1.15fr]">
+    <main className="grid min-h-screen bg-black text-white lg:grid-cols-2">
+      {/* Left panel */}
+      <section className="relative hidden flex-col justify-between overflow-hidden border-r border-white/10 bg-linear-to-br from-purple-950/70 via-black to-black p-12 lg:flex">
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[48px_48px]" />
+        <div className="pointer-events-none absolute -left-32 top-1/3 h-96 w-96 rounded-full bg-purple-600/20 blur-3xl" />
 
-        <section className="relative hidden flex-col justify-between overflow-hidden bg-[#08090d] p-10 text-white lg:flex">
-          <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-indigo-500/20 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl" />
+        <Link href="/" className="relative z-10 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-purple-500 to-fuchsia-500 text-sm font-bold shadow-lg shadow-purple-500/30">
+            K
+          </div>
+          <span className="text-lg font-bold tracking-tight">Karya AI</span>
+        </Link>
 
-          <div className="relative z-10">
-            <Link href="/" className="inline-flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600">
-                <BriefcaseBusiness size={23} />
-              </div>
-
-              <span className="text-2xl font-bold tracking-tight">
-                KARYA
-              </span>
-            </Link>
-
-            <div className="mt-24">
-              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-indigo-300">
-                Employee Portal
-              </p>
-
-              <h1 className="max-w-sm text-4xl font-semibold leading-tight tracking-tight">
-                Your work.
-                <br />
-                Your team.
-                <br />
-                Your impact.
-              </h1>
-
-              <p className="mt-5 max-w-sm text-sm leading-7 text-gray-400">
-                Join your organization, connect with your team, and keep your
-                work moving forward in one place.
-              </p>
-            </div>
+        <div className="relative z-10">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1.5 text-xs text-purple-200">
+            <UserRound size={13} />
+            Employee portal
           </div>
 
-          <div className="relative z-10 space-y-5">
+          <h1 className="max-w-lg text-5xl font-bold leading-[1.1] tracking-tight">
+            Your work.
+            <br />
+            Your team.
+            <br />
+            <span className="bg-linear-to-r from-purple-300 to-fuchsia-400 bg-clip-text text-transparent">
+              Your impact.
+            </span>
+          </h1>
+
+          <p className="mt-6 max-w-md text-base leading-7 text-gray-400">
+            Join your organization, connect with your team and keep your work
+            moving forward in one place.
+          </p>
+
+          <div className="mt-10 max-w-md space-y-4 rounded-xl border border-white/10 bg-white/3 p-5 backdrop-blur">
             {[
               "A workspace built around your team",
               "Access based on your company role",
               "One place to manage your work",
             ].map((item) => (
               <div key={item} className="flex items-center gap-3">
-                <CheckCircle2
-                  size={19}
-                  className="shrink-0 text-indigo-400"
-                />
+                <CheckCircle2 size={18} className="shrink-0 text-purple-400" />
                 <span className="text-sm text-gray-300">{item}</span>
               </div>
             ))}
-
-            <div className="border-t border-white/10 pt-5 text-xs text-gray-500" />
           </div>
-        </section>
+        </div>
 
-        <section className="px-6 py-8 sm:px-10 sm:py-12 lg:px-12">
-          <div className="mx-auto max-w-md">
+        <p className="relative z-10 text-xs text-gray-600">
+          © 2026 Karya AI. All rights reserved.
+        </p>
+      </section>
 
-            <Link
-              href="/"
-              className="mb-8 inline-flex items-center gap-3 lg:hidden"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-white">
-                <BriefcaseBusiness size={21} />
-              </div>
+      {/* Right panel */}
+      <section className="relative flex items-center justify-center px-4 py-10 sm:px-8">
+        <div className="pointer-events-none absolute right-0 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-purple-700/10 blur-3xl" />
 
-              <span className="text-xl font-bold tracking-tight text-white">
-                KARYA
-              </span>
-            </Link>
-
-            <div className="mb-8">
-              <div className="mb-3 inline-flex items-center rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 py-1.5 text-xs font-semibold text-indigo-300">
-                Employee registration
-              </div>
-
-              <h2 className="text-3xl font-bold tracking-tight text-white">
-                Create your account
-              </h2>
-
-              <p className="mt-2 text-sm leading-6 text-gray-400">
-                Enter your details to join your organization.
-              </p>
+        <div className="relative w-full max-w-md">
+          <Link href="/" className="mb-8 flex items-center gap-3 lg:hidden">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-purple-500 to-fuchsia-500 text-sm font-bold">
+              K
             </div>
+            <span className="text-lg font-bold tracking-tight">Karya AI</span>
+          </Link>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="rounded-3xl border border-purple-500/30 bg-[#08080b] p-8 shadow-[0_0_80px_-20px_rgba(168,85,247,0.45)]">
+            <h2 className="text-2xl font-bold tracking-tight">
+              Create your account
+            </h2>
+            <p className="mt-2 text-sm text-gray-400">
+              Enter your details to join your organization.
+            </p>
 
+            <form onSubmit={handleSubmit} className="mt-8 space-y-5">
               <div>
-                <label htmlFor="fullName" className="mb-2 block text-sm font-semibold text-gray-200">
+                <label htmlFor="fullName" className={labelClass}>
                   Full name
                 </label>
-
                 <div className="relative">
-                  <UserRound size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
-
+                  <UserRound size={17} className={iconLeft} />
                   <input
                     id="fullName"
                     type="text"
@@ -347,13 +335,11 @@ export default function EmployeeRegister() {
               </div>
 
               <div>
-                <label htmlFor="email" className="mb-2 block text-sm font-semibold text-gray-200">
+                <label htmlFor="email" className={labelClass}>
                   Work email
                 </label>
-
                 <div className="relative">
-                  <Mail size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
-
+                  <Mail size={17} className={iconLeft} />
                   <input
                     id="email"
                     type="email"
@@ -368,13 +354,11 @@ export default function EmployeeRegister() {
               </div>
 
               <div>
-                <label htmlFor="company_id" className="mb-2 block text-sm font-semibold text-gray-200">
+                <label htmlFor="company_id" className={labelClass}>
                   Company
                 </label>
-
                 <div className="relative">
-                  <Building2 size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
-
+                  <Building2 size={17} className={iconLeft} />
                   <select
                     id="company_id"
                     required
@@ -383,7 +367,7 @@ export default function EmployeeRegister() {
                     disabled={companiesLoading}
                     className={`${inputClass} appearance-none pl-11 pr-10 ${form.company_id ? "" : "text-gray-500"}`}
                   >
-                    <option value="" className="bg-[#101116] text-white">
+                    <option value="" className="bg-[#08080b] text-white">
                       {companiesLoading
                         ? "Loading companies..."
                         : companies.length > 0
@@ -392,24 +376,21 @@ export default function EmployeeRegister() {
                     </option>
 
                     {companies.map((company) => (
-                      <option key={company.id} value={company.id} className="bg-[#101116] text-white">
+                      <option key={company.id} value={company.id} className="bg-[#08080b] text-white">
                         {company.company_name}
                       </option>
                     ))}
                   </select>
-
-                  <ChevronDown size={17} className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
+                  <ChevronDown size={16} className={iconRight} />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="role" className="mb-2 block text-sm font-semibold text-gray-200">
+                <label htmlFor="role" className={labelClass}>
                   Role in the company
                 </label>
-
                 <div className="relative">
-                  <BriefcaseBusiness size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
-
+                  <BriefcaseBusiness size={17} className={iconLeft} />
                   <select
                     id="role"
                     required
@@ -418,7 +399,7 @@ export default function EmployeeRegister() {
                     disabled={!form.company_id || companiesLoading}
                     className={`${inputClass} appearance-none pl-11 pr-10 ${form.role ? "" : "text-gray-500"}`}
                   >
-                    <option value="" className="bg-[#101116] text-white">
+                    <option value="" className="bg-[#08080b] text-white">
                       {!form.company_id
                         ? "Select a company first"
                         : availableRoles.length > 0
@@ -427,24 +408,21 @@ export default function EmployeeRegister() {
                     </option>
 
                     {availableRoles.map((role) => (
-                      <option key={role} value={role} className="bg-[#101116] text-white">
+                      <option key={role} value={role} className="bg-[#08080b] text-white">
                         {role}
                       </option>
                     ))}
                   </select>
-
-                  <ChevronDown size={17} className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
+                  <ChevronDown size={16} className={iconRight} />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="password" className="mb-2 block text-sm font-semibold text-gray-200">
+                <label htmlFor="password" className={labelClass}>
                   Password
                 </label>
-
                 <div className="relative">
-                  <LockKeyhole size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
-
+                  <LockKeyhole size={17} className={iconLeft} />
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -455,26 +433,23 @@ export default function EmployeeRegister() {
                     onChange={update("password")}
                     className={`${inputClass} pl-11 pr-12`}
                   />
-
                   <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-white"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-white"
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                   </button>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="confirm" className="mb-2 block text-sm font-semibold text-gray-200">
+                <label htmlFor="confirm" className={labelClass}>
                   Confirm password
                 </label>
-
                 <div className="relative">
-                  <LockKeyhole size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
-
+                  <LockKeyhole size={17} className={iconLeft} />
                   <input
                     id="confirm"
                     type={showConfirmPassword ? "text" : "password"}
@@ -485,20 +460,19 @@ export default function EmployeeRegister() {
                     onChange={update("confirm")}
                     className={`${inputClass} pl-11 pr-12`}
                   />
-
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
                     aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-white"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-white"
                   >
-                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showConfirmPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                   </button>
                 </div>
               </div>
 
               {error && (
-                <div role="alert" className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-400">
+                <div role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300">
                   {error}
                 </div>
               )}
@@ -506,33 +480,29 @@ export default function EmployeeRegister() {
               <button
                 type="submit"
                 disabled={loading || companiesLoading}
-                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-600 to-fuchsia-500 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-purple-600/30 transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-purple-500/30 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Creating your account..." : "Create account"}
-
                 {!loading && (
-                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                  <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
                 )}
               </button>
 
-              <p className="text-center text-sm leading-6 text-gray-500">
+              <p className="text-center text-xs leading-5 text-gray-500">
                 By creating an account, you agree to follow your
                 organization&apos;s policies.
               </p>
             </form>
-
-            <div className="mt-7 border-t border-white/10 pt-6 text-center">
-              <p className="text-sm text-gray-400">
-                Already have an account?{" "}
-                <Link href="/employee/login" className="font-semibold text-indigo-400 transition hover:text-indigo-300">
-                  Sign in
-                </Link>
-              </p>
-            </div>
-
           </div>
-        </section>
-      </div>
+
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Already have an account?{" "}
+            <Link href="/employee/login" className="font-semibold text-purple-400 transition hover:text-purple-300">
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </section>
     </main>
   );
 }

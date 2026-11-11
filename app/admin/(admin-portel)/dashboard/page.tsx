@@ -68,20 +68,21 @@ type Admin = {
   work_email: string;
 };
 
-const card = "rounded-xl border border-white/10 bg-[#101116]";
+const card =
+  "rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.05] via-white/[0.02] to-transparent backdrop-blur-xl";
 
 const badge: Record<string, string> = {
-  submitted: "bg-indigo-500/20 text-indigo-300",
-  pending: "bg-amber-500/20 text-amber-300",
-  blocked: "bg-red-500/20 text-red-400",
-  approved: "bg-emerald-500/20 text-emerald-300",
-  completed: "bg-emerald-500/20 text-emerald-300",
+  submitted: "bg-violet-500/20 text-violet-300 ring-1 ring-violet-400/30",
+  pending: "bg-amber-500/15 text-amber-300 ring-1 ring-amber-400/30",
+  blocked: "bg-red-500/15 text-red-400 ring-1 ring-red-400/30",
+  approved: "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-400/30",
+  completed: "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-400/30",
 };
 
 function getStatusClass(status?: string) {
   return (
     badge[(status || "").toLowerCase()] ||
-    "bg-white/10 text-gray-300"
+    "bg-white/10 text-zinc-300 ring-1 ring-white/10"
   );
 }
 
@@ -254,21 +255,25 @@ export default function AdminDashboard() {
       label: "Total employees",
       value: employees.length.toString(),
       icon: Users,
+      tone: "from-violet-500 to-violet-800",
     },
     {
       label: "Reports today",
       value: `${submittedEmployeeIds.size} / ${employees.length}`,
       icon: FileText,
+      tone: "from-indigo-500 to-violet-700",
     },
     {
       label: "Pending reviews",
       value: pendingReviews.length.toString(),
       icon: CheckCircle2,
+      tone: "from-fuchsia-500 to-purple-700",
     },
     {
       label: "Blocked tasks",
       value: blockedTasks.length.toString(),
       icon: AlertTriangle,
+      tone: "from-rose-500 to-violet-800",
     },
   ];
 
@@ -276,8 +281,8 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center text-gray-400">
-        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+      <div className="flex min-h-[50vh] items-center justify-center text-zinc-400">
+        <Loader2 className="mr-2 h-5 w-5 animate-spin text-violet-400" />
         Loading admin dashboard...
       </div>
     );
@@ -292,10 +297,10 @@ export default function AdminDashboard() {
             <h2 className="font-semibold text-white">
               Could not load dashboard
             </h2>
-            <p className="mt-1 text-sm text-gray-400">{error}</p>
+            <p className="mt-1 text-sm text-zinc-400">{error}</p>
             <button
               onClick={() => void loadDashboard()}
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-400"
+              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 px-4 py-2 text-sm font-medium text-white shadow-[0_0_24px_rgba(124,58,237,0.4)] transition hover:shadow-[0_0_34px_rgba(139,92,246,0.7)]"
             >
               <RefreshCw className="h-4 w-4" />
               Try again
@@ -307,11 +312,13 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-5">
+    <div className="relative mx-auto w-full max-w-6xl space-y-6">
+      <div className="pointer-events-none absolute -top-24 left-1/4 -z-10 h-72 w-96 rounded-full bg-violet-700/20 blur-[120px]" />
+
       {/* Header */}
       <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
         <div>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-zinc-400">
             {new Date().toLocaleDateString("en-IN", {
               weekday: "long",
               day: "numeric",
@@ -323,16 +330,17 @@ export default function AdminDashboard() {
               : ""}
           </p>
 
-          <h1 className="mt-1 text-2xl font-bold text-white sm:text-3xl">
+          <h1 className="mt-1 bg-gradient-to-r from-white via-violet-100 to-violet-400 bg-clip-text text-3xl font-semibold tracking-tight text-transparent sm:text-4xl">
             Admin overview
           </h1>
 
-          <p className="mt-1 text-sm text-gray-400">
+          <p className="mt-1 text-sm text-zinc-400">
             Track reporting, projects and team activity.
           </p>
 
           {admin?.full_name && (
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-500/10 px-3 py-1 text-xs text-violet-200">
+              <span className="h-1.5 w-1.5 rounded-full bg-violet-400" />
               Welcome, {admin.full_name}
             </p>
           )}
@@ -340,7 +348,7 @@ export default function AdminDashboard() {
 
         <button
           onClick={() => void loadDashboard()}
-          className="inline-flex w-fit items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-300 transition hover:bg-white/10"
+          className="inline-flex w-fit items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-zinc-200 backdrop-blur transition hover:border-violet-400/40 hover:bg-violet-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
         >
           <RefreshCw className="h-4 w-4" />
           Refresh
@@ -349,16 +357,25 @@ export default function AdminDashboard() {
 
       {/* Statistics */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {stats.map(({ label, value, icon: Icon }) => (
-          <div key={label} className={`${card} min-w-0 p-4 sm:p-5`}>
-            <div className="flex items-start justify-between gap-2">
-              <span className="text-xs leading-5 text-gray-400 sm:text-sm">
+        {stats.map(({ label, value, icon: Icon, tone }) => (
+          <div
+            key={label}
+            className={`${card} group relative min-w-0 overflow-hidden p-4 transition duration-300 hover:border-violet-400/40 sm:p-5`}
+          >
+            <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-violet-600/0 blur-3xl transition duration-500 group-hover:bg-violet-600/30" />
+
+            <div className="relative flex items-start justify-between gap-2">
+              <span className="text-xs leading-5 text-zinc-400 sm:text-sm">
                 {label}
               </span>
-              <Icon className="h-4 w-4 shrink-0 text-gray-400" />
+              <span
+                className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br ${tone} text-white shadow-[0_0_20px_rgba(124,58,237,0.4)]`}
+              >
+                <Icon className="h-4 w-4" />
+              </span>
             </div>
 
-            <p className="mt-3 wrap-break-word text-2xl font-bold text-white sm:text-3xl">
+            <p className="relative mt-4 wrap-break-word text-2xl font-semibold tracking-tight text-white sm:text-3xl">
               {value}
             </p>
           </div>
@@ -374,24 +391,26 @@ export default function AdminDashboard() {
               <h2 className="text-sm font-semibold text-white">
                 Reports awaiting review
               </h2>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-zinc-500">
                 {pendingReviews.length} report
                 {pendingReviews.length === 1 ? "" : "s"} to review
               </p>
             </div>
 
-            <span className="shrink-0 text-xs font-medium text-indigo-400">
+            <span className="shrink-0 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-300">
               {pendingReviews.length} pending
             </span>
           </div>
 
           {pendingReviews.length === 0 ? (
-            <div className="px-5 py-10 text-center">
-              <CheckCircle2 className="mx-auto h-8 w-8 text-emerald-400" />
-              <p className="mt-3 text-sm text-gray-300">
+            <div className="px-5 py-12 text-center">
+              <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-emerald-500/10 ring-1 ring-emerald-400/20">
+                <CheckCircle2 className="h-7 w-7 text-emerald-400" />
+              </span>
+              <p className="mt-4 text-sm text-zinc-200">
                 No reports awaiting review
               </p>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-zinc-500">
                 Submitted reports will appear here.
               </p>
             </div>
@@ -412,13 +431,13 @@ export default function AdminDashboard() {
                 return (
                   <li
                     key={report.id || `${title}-${index}`}
-                    className="flex flex-col gap-3 px-4 py-4 transition hover:bg-white/2 sm:flex-row sm:items-center sm:justify-between sm:px-5"
+                    className="group flex flex-col gap-3 px-4 py-4 transition hover:bg-violet-500/[0.06] sm:flex-row sm:items-center sm:justify-between sm:px-5"
                   >
                     <div className="min-w-0">
                       <p className="wrap-break-word text-sm font-semibold text-white">
                         {title}
                       </p>
-                      <p className="mt-1 wrap-break-word text-xs text-gray-400">
+                      <p className="mt-1 wrap-break-word text-xs text-zinc-400">
                         {employeeName}
                         {report.project ? ` · ${report.project}` : ""}
                         {(report.submittedAt || report.createdAt) &&
@@ -430,12 +449,12 @@ export default function AdminDashboard() {
 
                     <div className="flex items-center justify-between gap-3 sm:justify-end">
                       <span
-                        className={`rounded-md px-2 py-1 text-xs font-medium ${getStatusClass(status)}`}
+                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClass(status)}`}
                       >
                         {status}
                       </span>
 
-                      <ArrowRight className="h-4 w-4 shrink-0 text-gray-400" />
+                      <ArrowRight className="h-4 w-4 shrink-0 text-zinc-500 transition group-hover:translate-x-1 group-hover:text-violet-300" />
                     </div>
                   </li>
                 );
@@ -448,15 +467,17 @@ export default function AdminDashboard() {
         <div className="space-y-5">
           {/* Project progress */}
           <section className={card}>
-            <div className="flex items-center gap-2 border-b border-white/10 px-5 py-4">
-              <FolderKanban className="h-4 w-4 text-indigo-400" />
+            <div className="flex items-center gap-3 border-b border-white/10 px-5 py-4">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-violet-500 to-violet-800 shadow-[0_0_18px_rgba(124,58,237,0.4)]">
+                <FolderKanban className="h-4 w-4 text-white" />
+              </span>
               <h2 className="text-sm font-semibold text-white">
                 Project progress
               </h2>
             </div>
 
             {displayedProjects.length === 0 ? (
-              <p className="px-5 py-8 text-center text-sm text-gray-500">
+              <p className="px-5 py-8 text-center text-sm text-zinc-500">
                 No projects found.
               </p>
             ) : (
@@ -473,23 +494,23 @@ export default function AdminDashboard() {
                   return (
                     <li key={project.id || `${name}-${index}`}>
                       <div className="mb-2 flex items-start justify-between gap-3 text-xs">
-                        <span className="wrap-break-word text-white">
+                        <span className="wrap-break-word text-zinc-200">
                           {name}
                         </span>
-                        <span className="shrink-0 text-gray-400">
+                        <span className="shrink-0 font-medium text-violet-300">
                           {progress}%
                         </span>
                       </div>
 
-                      <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                      <div className="h-2 overflow-hidden rounded-full bg-white/10">
                         <div
-                          className="h-full rounded-full bg-indigo-400 transition-all"
+                          className="h-full rounded-full bg-gradient-to-r from-violet-600 via-violet-400 to-fuchsia-400 shadow-[0_0_12px_rgba(139,92,246,0.7)] transition-all duration-700"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
 
                       {project.status && (
-                        <p className="mt-2 text-xs text-gray-500">
+                        <p className="mt-2 text-xs text-zinc-500">
                           {project.status}
                         </p>
                       )}
@@ -505,7 +526,7 @@ export default function AdminDashboard() {
               <h2 className="text-sm font-semibold text-white">
                 Not submitted today
               </h2>
-              <span className="rounded-full bg-amber-500/10 px-2 py-1 text-xs text-amber-300">
+              <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-xs text-amber-300 ring-1 ring-amber-400/30">
                 {missingReports.length}
               </span>
             </div>
@@ -513,7 +534,7 @@ export default function AdminDashboard() {
             {missingReports.length === 0 ? (
               <div className="px-5 py-8 text-center">
                 <CheckCircle2 className="mx-auto h-7 w-7 text-emerald-400" />
-                <p className="mt-2 text-sm text-gray-400">
+                <p className="mt-2 text-sm text-zinc-400">
                   Everyone has submitted a report.
                 </p>
               </div>
@@ -533,7 +554,7 @@ export default function AdminDashboard() {
                       key={employee.user_id}
                       className="flex min-w-0 items-center gap-3"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-semibold text-indigo-300">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-400 to-violet-700 text-xs font-semibold text-white shadow-[0_0_16px_rgba(124,58,237,0.4)]">
                         {initials}
                       </span>
 
@@ -541,7 +562,7 @@ export default function AdminDashboard() {
                         <p className="truncate text-sm text-white">
                           {employee.full_name || "Unnamed employee"}
                         </p>
-                        <p className="truncate text-xs text-gray-500">
+                        <p className="truncate text-xs text-zinc-500">
                           {employee.role || "Employee"}
                         </p>
                       </div>
@@ -555,7 +576,7 @@ export default function AdminDashboard() {
       </div>
 
       {lastUpdated && (
-        <p className="text-right text-xs text-gray-600">
+        <p className="text-right text-xs text-zinc-600">
           Last updated: {lastUpdated.toLocaleTimeString("en-IN")}
         </p>
       )}

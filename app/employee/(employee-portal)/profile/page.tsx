@@ -199,12 +199,15 @@ export default function MyProfile() {
   ];
 
   const card =
-    "overflow-hidden rounded-xl border border-white/10 bg-[#101116]";
+    "overflow-hidden rounded-2xl border border-white/10 bg-[#08080b]";
+
+  const fieldInput =
+    "w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white outline-none transition placeholder:text-gray-600 hover:border-white/20 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10";
 
   if (loading) {
     return (
       <div className="mx-auto flex min-h-64 w-full max-w-3xl items-center justify-center gap-3 text-sm text-gray-400">
-        <Loader2 className="h-5 w-5 animate-spin text-indigo-400" />
+        <Loader2 className="h-5 w-5 animate-spin text-purple-400" />
         Loading your profile...
       </div>
     );
@@ -212,7 +215,7 @@ export default function MyProfile() {
 
   if (error && !employee) {
     return (
-      <div className="mx-auto w-full max-w-3xl rounded-xl border border-red-500/20 bg-red-500/10 p-5">
+      <div className="mx-auto w-full max-w-3xl rounded-2xl border border-red-500/20 bg-red-500/10 p-5">
         <p className="text-sm text-red-300">{error}</p>
         <button
           onClick={() => window.location.reload()}
@@ -236,24 +239,26 @@ export default function MyProfile() {
       </div>
 
       {error && (
-        <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
           {error}
         </div>
       )}
 
       {success && (
-        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
+        <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
           {success}
         </div>
       )}
 
-      <section className={`${card} p-4 sm:p-6`}>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
-          <div className="relative flex h-20 w-20 shrink-0 items-center justify-center self-start rounded-full bg-indigo-500/20 text-2xl font-bold text-indigo-300 sm:h-24 sm:w-24">
+      <section className={`${card} relative p-4 sm:p-6`}>
+        <div className="pointer-events-none absolute -left-20 -top-20 h-56 w-56 rounded-full bg-purple-600/15 blur-3xl" />
+
+        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+          <div className="relative flex h-20 w-20 shrink-0 items-center justify-center self-start rounded-full bg-linear-to-br from-purple-500 to-fuchsia-500 text-2xl font-bold text-white shadow-lg shadow-purple-500/30 sm:h-24 sm:w-24">
             {initials || <UserRound className="h-9 w-9" />}
 
             <span
-              className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-[#0a0b0e] text-gray-300"
+              className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-black text-gray-300"
               title="Profile photo"
             >
               <Camera className="h-3.5 w-3.5" />
@@ -295,7 +300,7 @@ export default function MyProfile() {
                 setError("");
                 setSuccess("");
               }}
-              className="inline-flex items-center justify-center gap-2 self-start rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-white transition hover:bg-white/5 sm:self-auto"
+              className="inline-flex items-center justify-center gap-2 self-start rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-white transition hover:border-purple-500/40 hover:bg-purple-500/10 sm:self-auto"
             >
               <Pencil className="h-3.5 w-3.5" />
               Edit details
@@ -316,7 +321,7 @@ export default function MyProfile() {
                 type="button"
                 onClick={savePersonalDetails}
                 disabled={saving || !personal.full_name.trim()}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-500 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-400 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-linear-to-r from-purple-600 to-fuchsia-500 px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-purple-600/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {saving ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -352,7 +357,7 @@ export default function MyProfile() {
                       }
                       rows={3}
                       placeholder="Tell us a little about yourself"
-                      className="w-full resize-y rounded-lg border border-white/10 bg-[#0a0b0e] px-3 py-2.5 text-sm text-white outline-none transition placeholder:text-gray-600 focus:border-indigo-500"
+                      className={`${fieldInput} resize-y`}
                     />
                   ) : (
                     <input
@@ -369,7 +374,7 @@ export default function MyProfile() {
                           ? "Enter your phone number"
                           : "Enter your full name"
                       }
-                      className="w-full rounded-lg border border-white/10 bg-[#0a0b0e] px-3 py-2.5 text-sm text-white outline-none transition placeholder:text-gray-600 focus:border-indigo-500"
+                      className={fieldInput}
                     />
                   )
                 ) : (

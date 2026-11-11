@@ -24,13 +24,17 @@ import { useRouter } from "next/navigation";
 import bcrypt from "bcryptjs";
 
 const inputClass =
-  "w-full rounded-xl border border-white/10 bg-[#101116] px-4 py-3 text-sm text-white placeholder:text-gray-500 outline-none transition-all [color-scheme:dark] focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20";
+  "w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-white placeholder:text-zinc-600 outline-none transition-all [color-scheme:dark] focus:border-violet-400 focus:bg-black/70 focus:ring-4 focus:ring-violet-500/15";
 
-const labelClass = "mb-2 block text-sm font-medium text-gray-300";
+const labelClass = "mb-2 block text-sm font-medium text-zinc-300";
 const iconLeft =
-  "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500";
+  "pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500";
 const iconRight =
-  "pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400";
+  "pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400";
+const legendClass =
+  "mb-5 flex items-center gap-3 text-sm font-semibold text-white";
+const legendIcon =
+  "grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-violet-500 to-violet-800 text-white shadow-[0_0_20px_rgba(124,58,237,0.45)]";
 
 const INDUSTRIES = [
   "Technology",
@@ -169,46 +173,44 @@ export default function AdminRegisterPage() {
   };
 
   return (
-    <main className="h-screen overflow-y-auto bg-[#08090d] text-white">
+    <main className="h-screen overflow-y-auto bg-black text-white">
       <div className="grid min-h-full lg:grid-cols-[0.85fr_1.15fr]">
+        {/* Brand panel */}
+        <aside className="relative top-0 hidden h-screen flex-col justify-center overflow-hidden border-r border-white/10 px-8 py-6 lg:sticky lg:flex xl:px-12">
+          <div className="absolute -left-32 top-10 h-120 w-120 rounded-full bg-violet-700/40 blur-[130px]" />
+          <div className="absolute -bottom-32 -right-20 h-96 w-96 rounded-full bg-fuchsia-600/20 blur-[120px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.07)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_75%)]" />
 
-        <aside className="relative top-0 hidden h-screen flex-col justify-center overflow-hidden border-r border-white/10 bg-[#08090d] px-8 py-6 lg:sticky lg:flex xl:px-12">
-
-          <div className="absolute -left-32 top-20 h-80 w-80 rounded-full bg-indigo-500/10 blur-[120px]" />
-          <div className="absolute -bottom-32 -right-20 h-80 w-80 rounded-full bg-indigo-500/10 blur-[100px]" />
-
-          <div className="relative z-10 mb-8">
+          <div className="relative z-10 mb-10">
             <Link href="/" className="inline-flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500 text-lg font-bold shadow-lg shadow-indigo-500/20">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-violet-400 to-violet-700 text-lg font-bold shadow-[0_0_30px_rgba(139,92,246,0.7)]">
                 K
-              </div>
-
-              <span className="text-xl font-bold tracking-[0.2em]">
-                KARYA
+              </span>
+              <span className="text-lg font-semibold tracking-tight">
+                Karya AI
               </span>
             </Link>
           </div>
 
           <div className="relative z-10 max-w-lg">
-
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-500/10 px-3 py-1.5 text-xs font-medium text-indigo-300">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 backdrop-blur">
               <ShieldCheck className="h-4 w-4" />
               Organization management
             </div>
 
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight xl:text-4xl">
-              Build a more
-              <span className="block text-indigo-400">
+            <h1 className="text-4xl font-semibold leading-[1.1] tracking-tight xl:text-5xl">
+              Build a more{" "}
+              <span className="bg-gradient-to-r from-violet-300 via-violet-500 to-fuchsia-400 bg-clip-text text-transparent">
                 connected workplace.
               </span>
             </h1>
 
-            <p className="mt-4 max-w-md text-sm leading-6 text-gray-400">
+            <p className="mt-5 max-w-md text-sm leading-6 text-zinc-400">
               Create your organization, define company roles, and give your
               team a place to share work and stay aligned.
             </p>
 
-            <div className="mt-6 space-y-4">
+            <div className="mt-8 space-y-3">
               {[
                 {
                   icon: Building2,
@@ -229,18 +231,17 @@ export default function AdminRegisterPage() {
               ].map((item) => (
                 <div
                   key={item.title}
-                  className="flex items-start gap-3"
+                  className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl transition hover:border-violet-400/40"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-[#101116] text-indigo-300">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-violet-800 text-white shadow-[0_0_24px_rgba(124,58,237,0.45)]">
                     <item.icon className="h-4 w-4" />
-                  </div>
+                  </span>
 
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-200">
+                    <h3 className="text-sm font-semibold text-white">
                       {item.title}
                     </h3>
-
-                    <p className="mt-1 text-sm leading-5 text-gray-500">
+                    <p className="mt-1 text-sm leading-5 text-zinc-500">
                       {item.description}
                     </p>
                   </div>
@@ -248,382 +249,381 @@ export default function AdminRegisterPage() {
               ))}
             </div>
           </div>
-
         </aside>
 
-        <section className="flex min-h-screen items-center justify-center px-4 py-10 sm:px-8 lg:px-10 xl:px-16">
-          <div className="w-full max-w-2xl">
+        {/* Form */}
+        <section className="relative flex min-h-screen items-center justify-center px-4 py-10 sm:px-8 lg:px-10 xl:px-16">
+          <div className="pointer-events-none absolute right-0 top-0 h-80 w-80 rounded-full bg-violet-700/20 blur-[120px]" />
 
+          <div className="relative w-full max-w-2xl">
             <div className="mb-8 flex items-center gap-3 lg:hidden">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500 text-lg font-bold">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-violet-400 to-violet-700 text-lg font-bold shadow-[0_0_24px_rgba(139,92,246,0.6)]">
                 K
-              </div>
-
-              <span className="text-xl font-bold tracking-[0.2em]">
-                KARYA
               </span>
-
-              <span className="rounded-md bg-indigo-500/20 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-indigo-300">
+              <span className="text-lg font-semibold">Karya AI</span>
+              <span className="rounded-md bg-violet-500/20 px-2 py-1 text-[10px] font-semibold text-violet-300">
                 Admin
               </span>
             </div>
 
             <div className="mb-8">
-              <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-indigo-400">
-                <span className="h-px w-6 bg-indigo-400" />
-                Get started
-              </div>
-
               <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
                 Create your account
               </h2>
-
-              <p className="mt-3 max-w-lg text-sm leading-6 text-gray-400">
+              <p className="mt-3 max-w-lg text-sm leading-6 text-zinc-400">
                 Set up your organization and administrator profile to get
-                started with KARYA.
+                started with Karya AI.
               </p>
             </div>
 
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-8 rounded-2xl border border-white/10 bg-[#101116] p-5 shadow-2xl shadow-black/20 sm:p-8"
-            >
-              <fieldset className="space-y-5">
-                <legend className="mb-5 flex items-center gap-2 text-sm font-semibold text-gray-200">
-                  <Building2 className="h-4 w-4 text-indigo-400" />
-                  Company details
-                </legend>
+            <div className="rounded-3xl bg-linear-to-b from-violet-500/40 via-white/10 to-transparent p-px shadow-[0_30px_100px_-30px_rgba(124,58,237,0.6)]">
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-8 rounded-3xl bg-zinc-950/95 p-5 backdrop-blur-xl sm:p-8"
+              >
+                <fieldset className="space-y-5">
+                  <legend className={legendClass}>
+                    <span className={legendIcon}>
+                      <Building2 className="h-4 w-4" />
+                    </span>
+                    Company details
+                  </legend>
 
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="companyName" className={labelClass}>
-                      Company name <span className="text-indigo-400">*</span>
-                    </label>
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="companyName" className={labelClass}>
+                        Company name <span className="text-violet-400">*</span>
+                      </label>
 
-                    <input
-                      id="companyName"
-                      required
-                      value={form.companyName}
-                      onChange={update("companyName")}
-                      placeholder="Meridian Labs"
-                      className={inputClass}
-                    />
+                      <input
+                        id="companyName"
+                        required
+                        value={form.companyName}
+                        onChange={update("companyName")}
+                        placeholder="Meridian Labs"
+                        className={inputClass}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="website" className={labelClass}>
+                        Website
+                      </label>
+
+                      <div className="relative">
+                        <Globe className={iconLeft} />
+
+                        <input
+                          id="website"
+                          type="url"
+                          value={form.website}
+                          onChange={update("website")}
+                          placeholder="https://company.com"
+                          className={`${inputClass} pl-11`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="industry" className={labelClass}>
+                        Industry <span className="text-violet-400">*</span>
+                      </label>
+
+                      <div className="relative">
+                        <select
+                          id="industry"
+                          required
+                          value={form.industry}
+                          onChange={update("industry")}
+                          className={`${inputClass} appearance-none pr-10 ${
+                            form.industry ? "" : "text-zinc-500!"
+                          }`}
+                        >
+                          <option value="" className="bg-zinc-950">
+                            Select industry
+                          </option>
+
+                          {INDUSTRIES.map((industry) => (
+                            <option
+                              key={industry}
+                              value={industry}
+                              className="bg-zinc-950 text-white"
+                            >
+                              {industry}
+                            </option>
+                          ))}
+                        </select>
+
+                        <ChevronDown className={iconRight} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="size" className={labelClass}>
+                        Company size <span className="text-violet-400">*</span>
+                      </label>
+
+                      <div className="relative">
+                        <select
+                          id="size"
+                          required
+                          value={form.size}
+                          onChange={update("size")}
+                          className={`${inputClass} appearance-none pr-10 ${
+                            form.size ? "" : "text-zinc-500!"
+                          }`}
+                        >
+                          <option value="" className="bg-zinc-950">
+                            Select company size
+                          </option>
+
+                          {SIZES.map((size) => (
+                            <option
+                              key={size}
+                              value={size}
+                              className="bg-zinc-950 text-white"
+                            >
+                              {size} employees
+                            </option>
+                          ))}
+                        </select>
+
+                        <ChevronDown className={iconRight} />
+                      </div>
+                    </div>
                   </div>
 
                   <div>
-                    <label htmlFor="website" className={labelClass}>
-                      Website
+                    <label htmlFor="address" className={labelClass}>
+                      Company address
                     </label>
 
                     <div className="relative">
-                      <Globe className={iconLeft} />
+                      <MapPin className={iconLeft} />
 
                       <input
-                        id="website"
-                        type="url"
-                        value={form.website}
-                        onChange={update("website")}
-                        placeholder="https://company.com"
-                        className={`${inputClass} pl-10`}
+                        id="address"
+                        value={form.address}
+                        onChange={update("address")}
+                        placeholder="Street, city, country"
+                        className={`${inputClass} pl-11`}
                       />
                     </div>
                   </div>
-                </div>
+                </fieldset>
 
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="industry" className={labelClass}>
-                      Industry <span className="text-indigo-400">*</span>
-                    </label>
+                <fieldset className="space-y-4 border-t border-white/10 pt-7">
+                  <legend className={legendClass}>
+                    <span className={legendIcon}>
+                      <Users className="h-4 w-4" />
+                    </span>
+                    Company roles
+                  </legend>
 
-                    <div className="relative">
-                      <select
-                        id="industry"
-                        required
-                        value={form.industry}
-                        onChange={update("industry")}
-                        className={`${inputClass} appearance-none pr-10 ${
-                          form.industry ? "" : "text-gray-500!"
-                        }`}
-                      >
-                        <option value="" className="bg-[#101116]">
-                          Select industry
-                        </option>
+                  <p className="text-sm leading-6 text-zinc-400">
+                    Add the roles available in your organization. Employees can
+                    be assigned these roles later.
+                  </p>
 
-                        {INDUSTRIES.map((industry) => (
-                          <option
-                            key={industry}
-                            value={industry}
-                            className="bg-[#101116] text-white"
-                          >
-                            {industry}
-                          </option>
-                        ))}
-                      </select>
-
-                      <ChevronDown className={iconRight} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="size" className={labelClass}>
-                      Company size <span className="text-indigo-400">*</span>
-                    </label>
-
-                    <div className="relative">
-                      <select
-                        id="size"
-                        required
-                        value={form.size}
-                        onChange={update("size")}
-                        className={`${inputClass} appearance-none pr-10 ${
-                          form.size ? "" : "text-gray-500!"
-                        }`}
-                      >
-                        <option value="" className="bg-[#101116]">
-                          Select company size
-                        </option>
-
-                        {SIZES.map((size) => (
-                          <option
-                            key={size}
-                            value={size}
-                            className="bg-[#101116] text-white"
-                          >
-                            {size} employees
-                          </option>
-                        ))}
-                      </select>
-
-                      <ChevronDown className={iconRight} />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="address" className={labelClass}>
-                    Company address
-                  </label>
-
-                  <div className="relative">
-                    <MapPin className={iconLeft} />
-
+                  <div className="flex items-center gap-2">
                     <input
-                      id="address"
-                      value={form.address}
-                      onChange={update("address")}
-                      placeholder="Street, city, country"
-                      className={`${inputClass} pl-10`}
+                      id="newRole"
+                      type="text"
+                      value={newRole}
+                      onChange={(e) => setNewRole(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          addRole();
+                        }
+                      }}
+                      placeholder="e.g. Manager, Developer, HR"
+                      className={`${inputClass} min-w-0 flex-1`}
                     />
+
+                    <button
+                      type="button"
+                      onClick={addRole}
+                      className="flex shrink-0 items-center gap-2 rounded-xl bg-linear-to-r from-violet-600 to-violet-500 px-4 py-3 text-sm font-semibold text-white shadow-[0_0_24px_rgba(124,58,237,0.4)] transition hover:shadow-[0_0_34px_rgba(139,92,246,0.7)] focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
+                    >
+                      <Plus className="h-4 w-4" />
+                      Add
+                    </button>
                   </div>
-                </div>
-              </fieldset>
 
-              <fieldset className="space-y-4 border-t border-white/10 pt-7">
-                <legend className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-200">
-                  <Users className="h-4 w-4 text-indigo-400" />
-                  Company roles
-                </legend>
+                  {roles.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {roles.map((role) => (
+                        <span
+                          key={role}
+                          className="flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-sm text-violet-200"
+                        >
+                          {role}
 
-                <p className="text-sm leading-6 text-gray-400">
-                  Add the roles available in your organization. Employees can
-                  be assigned these roles later.
-                </p>
+                          <button
+                            type="button"
+                            onClick={() => removeRole(role)}
+                            aria-label={`Remove ${role}`}
+                            className="rounded-full text-zinc-400 transition-colors hover:text-red-400"
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="rounded-xl border border-dashed border-white/10 px-4 py-5 text-center text-sm text-zinc-500">
+                      No roles added yet.
+                    </p>
+                  )}
 
-                <div className="flex items-center gap-2">
-                  <input
-                    id="newRole"
-                    type="text"
-                    value={newRole}
-                    onChange={(e) => setNewRole(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addRole();
-                      }
-                    }}
-                    placeholder="e.g. Manager, Developer, HR"
-                    className={`${inputClass} min-w-0 flex-1`}
-                  />
+                  <p className="text-xs text-zinc-500">
+                    {roles.length} {roles.length === 1 ? "role" : "roles"} added
+                  </p>
+                </fieldset>
 
-                  <button
-                    type="button"
-                    onClick={addRole}
-                    className="flex shrink-0 items-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Add
-                  </button>
-                </div>
+                <fieldset className="space-y-5 border-t border-white/10 pt-7">
+                  <legend className={legendClass}>
+                    <span className={legendIcon}>
+                      <UserRound className="h-4 w-4" />
+                    </span>
+                    Administrator details
+                  </legend>
 
-                {roles.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {roles.map((role) => (
-                      <span
-                        key={role}
-                        className="flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-500/10 px-3 py-1.5 text-sm text-indigo-300"
-                      >
-                        {role}
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="fullName" className={labelClass}>
+                        Full name <span className="text-violet-400">*</span>
+                      </label>
+
+                      <input
+                        id="fullName"
+                        required
+                        autoComplete="name"
+                        value={form.fullName}
+                        onChange={update("fullName")}
+                        placeholder="Your full name"
+                        className={inputClass}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className={labelClass}>
+                        Work email <span className="text-violet-400">*</span>
+                      </label>
+
+                      <div className="relative">
+                        <Mail className={iconLeft} />
+
+                        <input
+                          id="email"
+                          type="email"
+                          required
+                          autoComplete="email"
+                          value={form.email}
+                          onChange={update("email")}
+                          placeholder="you@company.com"
+                          className={`${inputClass} pl-11`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="password" className={labelClass}>
+                        Password <span className="text-violet-400">*</span>
+                      </label>
+
+                      <div className="relative">
+                        <LockKeyhole className={iconLeft} />
+
+                        <input
+                          id="password"
+                          type={show ? "text" : "password"}
+                          required
+                          autoComplete="new-password"
+                          value={form.password}
+                          onChange={update("password")}
+                          placeholder="Create a strong password"
+                          className={`${inputClass} pl-11 pr-11`}
+                        />
 
                         <button
                           type="button"
-                          onClick={() => removeRole(role)}
-                          aria-label={`Remove ${role}`}
-                          className="rounded-full text-gray-400 transition-colors hover:text-red-400"
+                          onClick={() => setShow((prev) => !prev)}
+                          aria-label={show ? "Hide password" : "Show password"}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded text-zinc-400 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
                         >
-                          <X className="h-3.5 w-3.5" />
+                          {show ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
                         </button>
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="rounded-xl border border-dashed border-white/10 px-4 py-5 text-center text-sm text-gray-500">
-                    No roles added yet.
-                  </p>
-                )}
-
-                <p className="text-xs text-gray-500">
-                  {roles.length} {roles.length === 1 ? "role" : "roles"} added
-                </p>
-              </fieldset>
-
-              <fieldset className="space-y-5 border-t border-white/10 pt-7">
-                <legend className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-200">
-                  <UserRound className="h-4 w-4 text-indigo-400" />
-                  Administrator details
-                </legend>
-
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="fullName" className={labelClass}>
-                      Full name <span className="text-indigo-400">*</span>
-                    </label>
-
-                    <input
-                      id="fullName"
-                      required
-                      autoComplete="name"
-                      value={form.fullName}
-                      onChange={update("fullName")}
-                      placeholder="Your full name"
-                      className={inputClass}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className={labelClass}>
-                      Work email <span className="text-indigo-400">*</span>
-                    </label>
-
-                    <div className="relative">
-                      <Mail className={iconLeft} />
-
-                      <input
-                        id="email"
-                        type="email"
-                        required
-                        autoComplete="email"
-                        value={form.email}
-                        onChange={update("email")}
-                        placeholder="you@company.com"
-                        className={`${inputClass} pl-10`}
-                      />
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="password" className={labelClass}>
-                      Password <span className="text-indigo-400">*</span>
-                    </label>
-
-                    <div className="relative">
-                      <LockKeyhole className={iconLeft} />
+                    <div>
+                      <label htmlFor="confirm" className={labelClass}>
+                        Confirm password{" "}
+                        <span className="text-violet-400">*</span>
+                      </label>
 
                       <input
-                        id="password"
+                        id="confirm"
                         type={show ? "text" : "password"}
                         required
                         autoComplete="new-password"
-                        value={form.password}
-                        onChange={update("password")}
-                        placeholder="Create a strong password"
-                        className={`${inputClass} pl-10 pr-11`}
+                        value={form.confirm}
+                        onChange={update("confirm")}
+                        placeholder="Re-enter password"
+                        className={inputClass}
                       />
-
-                      <button
-                        type="button"
-                        onClick={() => setShow((prev) => !prev)}
-                        aria-label={show ? "Hide password" : "Show password"}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded text-gray-400 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
-                      >
-                        {show ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
                     </div>
                   </div>
 
-                  <div>
-                    <label htmlFor="confirm" className={labelClass}>
-                      Confirm password{" "}
-                      <span className="text-indigo-400">*</span>
-                    </label>
+                  <p className="text-xs leading-5 text-zinc-500">
+                    Use at least 8 characters, including one uppercase letter
+                    and one number.
+                  </p>
+                </fieldset>
 
-                    <input
-                      id="confirm"
-                      type={show ? "text" : "password"}
-                      required
-                      autoComplete="new-password"
-                      value={form.confirm}
-                      onChange={update("confirm")}
-                      placeholder="Re-enter password"
-                      className={inputClass}
-                    />
-                  </div>
-                </div>
-
-                <p className="text-xs leading-5 text-gray-500">
-                  Use at least 8 characters, including one uppercase letter
-                  and one number.
-                </p>
-              </fieldset>
-
-              {error && (
-                <p
-                  role="alert"
-                  className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300"
-                >
-                  {error}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-indigo-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {loading ? "Creating account..." : "Create admin account"}
-
-                {!loading && (
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                {error && (
+                  <p
+                    role="alert"
+                    className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300"
+                  >
+                    {error}
+                  </p>
                 )}
-              </button>
 
-              <p className="text-center text-xs leading-5 text-gray-500">
-                By creating an account, you agree to your organization’s
-                applicable terms and policies.
-              </p>
-            </form>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 via-violet-500 to-fuchsia-500 px-4 py-3.5 text-sm font-semibold text-white shadow-[0_0_36px_rgba(139,92,246,0.45)] transition hover:shadow-[0_0_48px_rgba(139,92,246,0.7)] focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-300 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {loading ? "Creating account..." : "Create admin account"}
 
-            <p className="mt-7 text-center text-sm text-gray-400">
+                  {!loading && (
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  )}
+                </button>
+
+                <p className="text-center text-xs leading-5 text-zinc-500">
+                  By creating an account, you agree to your organization’s
+                  applicable terms and policies.
+                </p>
+              </form>
+            </div>
+
+            <p className="mt-7 text-center text-sm text-zinc-400">
               Already have an account?{" "}
               <Link
                 href="/admin/login"
-                className="font-semibold text-indigo-400 transition hover:text-indigo-300"
+                className="font-semibold text-violet-400 transition hover:text-violet-300"
               >
                 Sign in
               </Link>

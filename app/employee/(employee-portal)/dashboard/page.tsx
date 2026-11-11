@@ -67,14 +67,14 @@ type Employee = {
 
 const priorityStyle: Record<string, string> = {
   Low: "bg-slate-500/15 text-slate-300",
-  Medium: "bg-indigo-500/20 text-indigo-300",
+  Medium: "bg-purple-500/20 text-purple-300",
   High: "bg-amber-500/20 text-amber-400",
   Urgent: "bg-red-500/20 text-red-400",
 };
 
 const statusStyle: Record<string, string> = {
   Blocked: "bg-red-500/15 text-red-400",
-  "In progress": "bg-indigo-500/20 text-indigo-300",
+  "In progress": "bg-purple-500/20 text-purple-300",
   "To do": "bg-white/10 text-gray-300",
   Todo: "bg-white/10 text-gray-300",
   Pending: "bg-amber-500/15 text-amber-400",
@@ -82,11 +82,14 @@ const statusStyle: Record<string, string> = {
   Done: "bg-emerald-500/15 text-emerald-400",
   Active: "bg-emerald-500/15 text-emerald-400",
   Reviewed: "bg-emerald-500/15 text-emerald-400",
-  Submitted: "bg-indigo-500/20 text-indigo-300",
+  Submitted: "bg-purple-500/20 text-purple-300",
   "Changes requested": "bg-amber-500/15 text-amber-400",
 };
 
-const card = "rounded-xl border border-white/10 bg-[#101116]";
+const card = "rounded-2xl border border-white/10 bg-[#08080b]";
+const bar = "bg-gradient-to-r from-purple-500 to-fuchsia-400";
+const primaryBtn =
+  "bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white shadow-lg shadow-purple-600/30 transition hover:brightness-110";
 
 function getStatusClass(status?: string) {
   if (!status) return "bg-white/10 text-gray-300";
@@ -357,8 +360,8 @@ export default function Home() {
       label: "Reports this week",
       value: String(reportsThisWeek),
       icon: FileText,
-      color: "text-indigo-400",
-      background: "bg-indigo-500/10",
+      color: "text-purple-300",
+      background: "bg-purple-500/10",
     },
     {
       label: "Tasks completed",
@@ -371,8 +374,8 @@ export default function Home() {
       label: "Active projects",
       value: String(activeProjects),
       icon: FolderKanban,
-      color: "text-sky-400",
-      background: "bg-sky-500/10",
+      color: "text-fuchsia-300",
+      background: "bg-fuchsia-500/10",
     },
     {
       label: "Hours this week",
@@ -408,7 +411,16 @@ export default function Home() {
 
           <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
             {greeting}
-            {employee ? `, ${fullName}` : ""}
+            {employee ? (
+              <>
+                ,{" "}
+                <span className="bg-linear-to-r from-purple-300 to-fuchsia-400 bg-clip-text text-transparent">
+                  {fullName}
+                </span>
+              </>
+            ) : (
+              ""
+            )}
           </h1>
 
           <p className="mt-2 text-sm text-gray-400">
@@ -420,12 +432,12 @@ export default function Home() {
           <Link
             href="/employee/notifications"
             aria-label="Notifications"
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#101116] transition hover:bg-white/5"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#08080b] transition hover:border-purple-500/40 hover:bg-purple-500/10"
           >
             <Bell className="h-4 w-4" />
           </Link>
 
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/20 text-sm font-bold text-indigo-300">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-purple-500 to-fuchsia-500 text-sm font-bold text-white shadow-lg shadow-purple-500/30">
             {initials || "E"}
           </div>
         </div>
@@ -433,7 +445,7 @@ export default function Home() {
 
       {loading && (
         <div className={`${card} flex items-center gap-3 p-6`}>
-          <RefreshCw className="h-5 w-5 animate-spin text-indigo-400" />
+          <RefreshCw className="h-5 w-5 animate-spin text-purple-400" />
           <p className="text-sm text-gray-400">
             Loading your dashboard...
           </p>
@@ -441,7 +453,7 @@ export default function Home() {
       )}
 
       {!loading && error && (
-        <div className="flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-500/10 p-4">
+        <div className="flex items-start gap-3 rounded-2xl border border-red-500/20 bg-red-500/10 p-4">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
 
           <div className="flex-1">
@@ -469,7 +481,7 @@ export default function Home() {
               return (
                 <div
                   key={stat.label}
-                  className={`${card} p-5 transition hover:border-white/20`}
+                  className={`${card} p-5 transition hover:border-purple-500/30`}
                 >
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-400">
@@ -494,7 +506,7 @@ export default function Home() {
           <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <Link
               href="/employee/submit-report"
-              className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-400"
+              className={`flex min-h-12 items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold ${primaryBtn}`}
             >
               <FileText className="h-4 w-4" />
               Submit Today&apos;s Report
@@ -503,18 +515,18 @@ export default function Home() {
 
             <Link
               href="/employee/reports"
-              className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#101116] px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/5"
+              className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#08080b] px-4 py-3 text-sm font-semibold text-white transition hover:border-purple-500/40 hover:bg-purple-500/5"
             >
-              <FileText className="h-4 w-4 text-indigo-400" />
+              <FileText className="h-4 w-4 text-purple-400" />
               View My Reports
               <ArrowRight className="ml-auto h-4 w-4 text-gray-500" />
             </Link>
 
             <Link
               href="/employee/projects"
-              className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#101116] px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/5 sm:col-span-2 lg:col-span-1"
+              className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#08080b] px-4 py-3 text-sm font-semibold text-white transition hover:border-purple-500/40 hover:bg-purple-500/5 sm:col-span-2 lg:col-span-1"
             >
-              <FolderKanban className="h-4 w-4 text-indigo-400" />
+              <FolderKanban className="h-4 w-4 text-purple-400" />
               View My Projects
               <ArrowRight className="ml-auto h-4 w-4 text-gray-500" />
             </Link>
@@ -534,7 +546,7 @@ export default function Home() {
 
               <Link
                 href="/employee/work"
-                className="flex items-center gap-1 text-xs font-medium text-indigo-400 transition hover:text-indigo-300"
+                className="flex items-center gap-1 text-xs font-medium text-purple-400 transition hover:text-purple-300"
               >
                 View all
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -588,7 +600,7 @@ export default function Home() {
                         <div className="mt-3 flex items-center gap-3">
                           <div className="h-1.5 w-24 overflow-hidden rounded-full bg-white/10">
                             <div
-                              className="h-full rounded-full bg-indigo-400 transition-all"
+                              className={`h-full rounded-full ${bar} transition-all`}
                               style={{ width: `${progress}%` }}
                             />
                           </div>
@@ -644,7 +656,7 @@ export default function Home() {
 
               <Link
                 href="/employee/projects"
-                className="flex items-center gap-1 text-xs font-medium text-indigo-400 transition hover:text-indigo-300"
+                className="flex items-center gap-1 text-xs font-medium text-purple-400 transition hover:text-purple-300"
               >
                 View all
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -674,11 +686,11 @@ export default function Home() {
                   return (
                     <article
                       key={project.id ?? `${project.name}-${index}`}
-                      className="rounded-xl border border-white/10 hover:bg-white/2 p-4 transition hover:border-indigo-500/30"
+                      className="rounded-2xl border border-white/10 p-4 transition hover:border-purple-500/40 hover:bg-purple-500/5"
                     >
                       <div className="flex items-start justify-between gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10">
-                          <FolderKanban className="h-5 w-5 text-indigo-400" />
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/10">
+                          <FolderKanban className="h-5 w-5 text-purple-300" />
                         </div>
 
                         <span
@@ -711,7 +723,7 @@ export default function Home() {
 
                         <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
                           <div
-                            className="h-full rounded-full bg-indigo-400 transition-all"
+                            className={`h-full rounded-full ${bar} transition-all`}
                             style={{ width: `${progress}%` }}
                           />
                         </div>
@@ -750,7 +762,7 @@ export default function Home() {
 
               <Link
                 href="/employee/reports"
-                className="flex items-center gap-1 text-xs font-medium text-indigo-400 transition hover:text-indigo-300"
+                className="flex items-center gap-1 text-xs font-medium text-purple-400 transition hover:text-purple-300"
               >
                 View all
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -771,7 +783,7 @@ export default function Home() {
 
                 <Link
                   href="/employee/submit-report"
-                  className="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-xs font-semibold text-white transition hover:bg-indigo-400"
+                  className={`mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold ${primaryBtn}`}
                 >
                   Submit a report
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -785,8 +797,8 @@ export default function Home() {
                     className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="flex min-w-0 items-start gap-3">
-                      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10">
-                        <FileText className="h-4 w-4 text-indigo-400" />
+                      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-purple-500/10">
+                        <FileText className="h-4 w-4 text-purple-300" />
                       </div>
 
                       <div className="min-w-0">
